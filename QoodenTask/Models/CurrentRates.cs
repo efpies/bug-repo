@@ -3,5 +3,5 @@
 public class CurrentRates
 {
     public DateTime Date { get; set; }
-    public List<Currency> rates { get; set; }
+    public Dictionary<string, decimal> Rates { get; set; }
 }

@@ -22,6 +22,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         };
         options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
         options.SlidingExpiration = true;
+        
+        options.Cookie.SameSite = SameSiteMode.None;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     });
 builder.Services.AddSingleton<ExchangeData>();
 builder.Services.AddScoped<ICurrencyService, CurrencyService>();
@@ -40,6 +43,14 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
+{
+    policy.WithOrigins("http://localhost:63342")
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials();
+}));
 
 using (var scope = builder.Services.BuildServiceProvider().CreateScope())
 {
@@ -62,6 +73,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -16,7 +16,7 @@ public class UserService : IUserService
     
     public async Task<User> GetById(int id, bool includeBlocked = false)
     {
-        return await _dbContext.Users.SingleOrDefaultAsync(u => u.Id == id && includeBlocked ? includeBlocked : u.IsActive);
+        return await _dbContext.Users.SingleOrDefaultAsync(u => u.Id == id && (includeBlocked ? includeBlocked : u.IsActive));
     }
 
     public async Task<List<User>> GetAll()

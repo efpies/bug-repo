@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,
+						initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+</head>
+
+<body>
+	<section class="mx-auto">
+		<div class="container">
+			
+			<div class="row justify-content-md-center h-100" id = "login-form">
+				<div class = "text-center my-5">
+					<div class="card fat">
+						<div class="card-body">
+							<h4 class="card-title">Login</h4>
+							<form method="POST" class="my-login-validation">
+								<div class="form-group">
+									<label for="user-id">User-id</label>
+									<input id="user-id" type="text" class="form-control" name="username" value="" required autofocus>
+								</div>
+
+								<div class="form-group">
+									<label for="password">Password
+									</label>
+									<input id="password" type="password" class="form-control" name="password" required data-eye>
+									<div class="invalid-feedback">
+										Password is required
+									</div>
+								</div>
+
+								<div class="form-group m-0">
+									<button type="submit" class="btn btn-primary btn-block">
+										Login
+									</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row justify-content-md-center h-100" id = "balances">
+				<h4 class = "text-center my-5">Balances</h4>
+				<table class="table" id="balance-table">
+					<thead>
+					<tr>
+						<th scope="col">CurrencyId</th>
+						<th scope="col">Balance</th>
+						<th scope="col">UsdAmount</th>
+					</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			
+			<div class="row justify-content-md-center h-100" id = "users">	
+				<h4 class = "text-center my-5">Users</h4>
+				<table class="table" id="user-table">
+					<thead>
+					<tr>
+						<th scope="col">UserId</th>
+						<th scope="col">Username</th>
+						<th scope="col">Pasword</th>
+						<th scope="col">Role</th>
+						<th scope="col">IsActive</th>
+					</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section>
+
+    <script src="main.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -58,7 +58,9 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> ChangePassword([FromServices] IUserService userService,
         [FromQuery] string newPass)
     {
-        if (await userService.GetById(Convert.ToInt32(ClaimsIdentity.DefaultNameClaimType)) is not { } user)
+        var userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimsIdentity.DefaultNameClaimType)?.Value);
+        
+        if (await userService.GetById(userId) is not { } user)
         {
             return NotFound();
         }

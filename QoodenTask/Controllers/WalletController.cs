@@ -15,7 +15,9 @@ public class WalletController : ControllerBase
     [HttpGet("balance")]
     public async Task<IActionResult> GetBalance([FromServices] IBalanceService balanceService)
     {
-        var balances = await balanceService.GetBalance(Convert.ToInt32(ClaimsIdentity.DefaultNameClaimType));
+        var userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimsIdentity.DefaultNameClaimType)?.Value);
+
+        var balances = await balanceService.GetBalance(userId);
         return Ok(balances);
     }
     
@@ -36,13 +38,16 @@ public class WalletController : ControllerBase
         [FromBody] BaseDepositModel depositModel, string currencyId)
     {
         Transaction tx = null;
+        
+        var userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimsIdentity.DefaultNameClaimType)?.Value);
+        
         if (depositModel is DepositFiatModel depositFiatModel)
         {
-            tx = await balanceService.DepositFiat(Convert.ToInt32(ClaimsIdentity.DefaultNameClaimType),
+            tx = await balanceService.DepositFiat(userId,
                 depositFiatModel, currencyId);
         } else if (depositModel is DepositCryptoModel depositCryptoModel)
         {
-            tx = await balanceService.DepositCrypto(Convert.ToInt32(ClaimsIdentity.DefaultNameClaimType),
+            tx = await balanceService.DepositCrypto(userId,
                 depositCryptoModel, currencyId);
         }
         if (tx is not { })
@@ -54,7 +59,8 @@ public class WalletController : ControllerBase
     [HttpPost("tx")]
     public async Task<IActionResult> GetTxs([FromServices] IBalanceService balanceService)
     {
-        var txs = await balanceService.GetTxsByUser(Convert.ToInt32(ClaimsIdentity.DefaultNameClaimType));
+        var userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimsIdentity.DefaultNameClaimType)?.Value);
+        var txs = await balanceService.GetTxsByUser(userId);
         return Ok(txs);
     }
 }

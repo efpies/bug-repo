@@ -80,13 +80,13 @@ function getUsers() {
 function onSubmit(e) {
     // Don't refresh the page
     e.preventDefault();
-
-    let uId = document.getElementById('user-id').value;
-    let pass = document.getElementById('password').value;
-    console.log(uId,pass);
+    
+    let formData = JSON.stringify(Object.fromEntries(new FormData(e.target)))
+    console.log(formData);
     
     $.post({
-        url: `${baseUrl}/auth/login?userId=${uId}&password=${pass}`,
+        url: `${baseUrl}/auth/login`,
+        data: formData,
         success: () => {
             $(loginForm).hide();
             getUsers();

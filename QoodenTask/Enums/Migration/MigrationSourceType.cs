@@ -1,6 +1,6 @@
 ﻿namespace QoodenTask.Enums;
 
-public enum MigrationSourceTypeEnum
+public enum MigrationSourceType
 {
     Json = 0
 }

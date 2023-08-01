@@ -11,11 +11,11 @@ public class RatesController : ControllerBase
 {
     [AllowAnonymous]
     [HttpPost("rates")]
-    public async Task<IActionResult> GetRates([FromServices] IBalanceService balanceService)
+    public async Task<IActionResult> GetRates([FromServices] IRateService rateService)
     {
-        var currentRates = await balanceService.GetCurrentRates();
+        var currentRates = await rateService.GetCurrentRates();
 
-        if (currentRates.Rates is null)
+        if (currentRates is null)
             return NotFound(currentRates);
         
         return Ok(currentRates);

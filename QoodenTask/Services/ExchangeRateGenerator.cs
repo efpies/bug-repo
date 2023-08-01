@@ -1,31 +1,26 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using QoodenTask.Data;
 using QoodenTask.Models;
+using QoodenTask.Options;
 using QoodenTask.ServiceInterfaces;
 
 namespace QoodenTask.Services;
 
 public class ExchangeRateGenerator: BackgroundService
 {
-    //public List<CurrencyRate> RateHistory { get; private set; }
     private ExchangeData _exchangeData { get; set; }
-    private IConfiguration _configuration { get; set; }
     private IDbContextFactory<AppDbContext> _dbContextFactory { get; set; }
-
-    private Random _random { get; set; }
-
-    private int _rateDelay { get; set; }
+    private readonly Random _random = new();
+    private int _rateDelayMiliseconds { get; set; }
 
 
-    public ExchangeRateGenerator(/*ICurrencyService currencyService,*/ 
-        IConfiguration configuration, ExchangeData exchangeData, IDbContextFactory<AppDbContext> dbContextFactory)
+    public ExchangeRateGenerator(IOptionsMonitor<RateOptions> rateOption, ExchangeData exchangeData, IDbContextFactory<AppDbContext> dbContextFactory)
     {
         _exchangeData = exchangeData;
-        _configuration = configuration;
-        //_currencyService = currencyService;
         _dbContextFactory = dbContextFactory;
-        _random = new Random();
-        _rateDelay = Convert.ToInt32(configuration["RateDelay"]);
+        _rateDelayMiliseconds =
+            rateOption.CurrentValue.RateDelayMiliseconds;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -36,7 +31,7 @@ public class ExchangeRateGenerator: BackgroundService
         {
             try
             {
-                using (var currencyService = new CurrencyService(_dbContextFactory.CreateDbContext()))//*new AppDbContext(_configuration["DbConnection"])))
+                using (var currencyService = new CurrencyService(_dbContextFactory.CreateDbContext()))
                 {
                     currencies = await currencyService.GetCurrencies();
                 }
@@ -47,7 +42,7 @@ public class ExchangeRateGenerator: BackgroundService
                 Console.WriteLine(ex.Message);
             }
  
-            await Task.Delay(_rateDelay);
+            await Task.Delay(_rateDelayMiliseconds);
         }
     }
 

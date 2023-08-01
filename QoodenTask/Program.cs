@@ -1,6 +1,9 @@
+using System.Reflection;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using QoodenTask.Data;
+using QoodenTask.Options;
 using QoodenTask.ServiceInterfaces;
 using QoodenTask.Services;
 
@@ -27,9 +30,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     });
 builder.Services.AddSingleton<ExchangeData>();
+builder.Services.AddScoped<IRateService, RateService>();
 builder.Services.AddScoped<ICurrencyService, CurrencyService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBalanceService, BalanceService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
+builder.Services.AddScoped<IDepositeService, DepositeService>();
 builder.Services.AddHostedService<ExchangeRateGenerator>();
 builder.Services.AddHostedService<MigrationService>();
 builder.Services.AddDbContextFactory<AppDbContext>(
@@ -42,7 +48,15 @@ builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(opt => {
+    opt.UseOneOfForPolymorphism();
+
+    opt.SelectDiscriminatorNameUsing(_ => "$type");
+    opt.SelectDiscriminatorValueUsing(subType => subType.BaseType!
+        .GetCustomAttributes<JsonDerivedTypeAttribute>()
+        .FirstOrDefault(x => x.DerivedType == subType)?
+        .TypeDiscriminator!.ToString());
+});
 
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
 {
@@ -51,6 +65,7 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
         .AllowAnyMethod()
         .AllowCredentials();
 }));
+builder.Services.Configure<RateOptions>(builder.Configuration.GetSection("RateOptions"));
 
 using (var scope = builder.Services.BuildServiceProvider().CreateScope())
 {

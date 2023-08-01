@@ -19,32 +19,35 @@ public class MigrationService: BackgroundService
     {
         using (var dbContext = _dbContextFactory.CreateDbContext())
         {
-            if (await dbContext.Migrations.CountAsync() < 1)
+            if (!await dbContext.Migrations.AnyAsync())
             {
                 await AddFirstMigrations(dbContext);
             }
             
-            var migrations = await dbContext.Migrations.Where(m => m.Status == MigrationStatusEnum.IsWaiting).ToListAsync();
+            var migrations = await dbContext.Migrations.Where(m => m.Status == MigrationStatus.Waiting).ToListAsync();
 
             foreach (var migration in migrations)
             {
-                if (migration.SourceType == MigrationSourceTypeEnum.Json)
+                if (migration.SourceType == MigrationSourceType.Json)
                 {
-                    var jsonService = new JsonService();
                     if (migration.SourceName == typeof(User).Name)
                     {
-                        var dataList = await jsonService.GetDataFromJson<User>(migration.SourcePath);
+                        var dataList = await JsonService.GetDataFromJson<User>(migration.SourcePath);
                         await dbContext.Users.AddRangeAsync(dataList);
                     }
                     else if (migration.SourceName == typeof(Currency).Name)
                     {
-                        var dataList = await jsonService.GetDataFromJson<Currency>(migration.SourcePath);
+                        var dataList = await JsonService.GetDataFromJson<Currency>(migration.SourcePath);
                         await dbContext.Currencies.AddRangeAsync(dataList);
                     }
 
-                    migration.Status = MigrationStatusEnum.Done;
+                    migration.Status = MigrationStatus.Done;
                     dbContext.Migrations.Update(migration);
                     await dbContext.SaveChangesAsync();
+                }
+                else
+                {
+                    Console.WriteLine($"A suitable handler was not found. Migration sourceType: {migration.SourceType}");
                 }
             }
         }
@@ -56,15 +59,15 @@ public class MigrationService: BackgroundService
         {
             SourceName = typeof(User).Name,
             SourcePath = @"..\QoodenTask\Users.json",
-            SourceType = MigrationSourceTypeEnum.Json,
-            Status = MigrationStatusEnum.IsWaiting
+            SourceType = MigrationSourceType.Json,
+            Status = MigrationStatus.Waiting
         });
         appDbContext.Migrations.Add(new Migration
         {
             SourceName = typeof(Currency).Name,
             SourcePath = @"..\QoodenTask\Curencies.json",
-            SourceType = MigrationSourceTypeEnum.Json,
-            Status = MigrationStatusEnum.IsWaiting
+            SourceType = MigrationSourceType.Json,
+            Status = MigrationStatus.Waiting
         });
         return await appDbContext.SaveChangesAsync();
     }

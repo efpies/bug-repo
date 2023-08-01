@@ -5,7 +5,6 @@ namespace QoodenTask.Data;
 
 public class AppDbContext : DbContext
 {
-    //private string _connStr { get; set; }
     public DbSet<User> Users => Set<User>();
     public DbSet<Balance> Balances => Set<Balance>();
     public DbSet<Transaction> Transactions => Set<Transaction>();

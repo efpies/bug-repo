@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using QoodenTask.Common;
 using QoodenTask.Enums;
 using QoodenTask.ServiceInterfaces;
 
@@ -9,36 +10,36 @@ namespace QoodenTask.Controllers;
 [Route("admin/wallets")]
 public class AdminWalletController: ControllerBase
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = Constants.Admin)]
     [HttpGet("tx")]
-    public async Task<IActionResult> GetTxs([FromServices] IBalanceService balanceService)
+    public async Task<IActionResult> GetTxs([FromServices] ITransactionService transactionService)
     {
-        return Ok(await balanceService.GetTxs());
+        return Ok(await transactionService.GetTxs());
     }
     
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = Constants.Admin)]
     [HttpGet("/approve/{txId}")]
-    public async Task<IActionResult> ApproveTx([FromServices] IBalanceService balanceService, int txId)
+    public async Task<IActionResult> ApproveTx([FromServices] ITransactionService transactionService, int txId)
     {
-        if (await balanceService.GetTxById(txId) is not { } user)
+        if (await transactionService.GetTxById(txId) is not { } tx)
         {
             return NotFound();
         }
 
-        await balanceService.ChangeStatusTx(txId, TransactionStatusEnum.IsApproved);
+        await transactionService.ApproveTx(tx);
         return Ok();
     }
     
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = Constants.Admin)]
     [HttpGet("decline/{txId}")]
-    public async Task<IActionResult> DeclineTx([FromServices] IBalanceService balanceService, int txId)
+    public async Task<IActionResult> DeclineTx([FromServices] ITransactionService transactionService, int txId)
     {
-        if (await balanceService.GetTxById(txId) is not { } user)
+        if (await transactionService.GetTxById(txId) is not { } tx)
         {
             return NotFound();
         }
 
-        await balanceService.ChangeStatusTx(txId, TransactionStatusEnum.IsDeclined);
+        await transactionService.DeclineTx(tx);
         return Ok();
     }
 }

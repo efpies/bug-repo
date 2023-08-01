@@ -2,9 +2,9 @@
 
 namespace QoodenTask.Services;
 
-public class JsonService
+public static class JsonService
 {
-    public async Task<List<T>> GetDataFromJson<T>(string fileName)
+    public static async Task<List<T>?> GetDataFromJson<T>(string fileName)
     {
         try
         {

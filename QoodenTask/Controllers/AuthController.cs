@@ -14,14 +14,14 @@ public class AuthController : ControllerBase
 {
     [AllowAnonymous]
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromServices] IUserService userService, [FromQuery] int userId, [FromQuery] string password)
+    public async Task<IActionResult> Login([FromServices] IUserService userService, [FromBody] LoginDto loginDto)
     {
-        if (await userService.GetById(userId) is not { } user)
+        if (await userService.GetById(loginDto.UserId) is not { } user)
         {
             return NotFound();
         }
 
-        if (!user.Password.Equals(password))
+        if (!user.Password.Equals(loginDto.Password))
         {
             return Unauthorized();
         }
@@ -44,9 +44,9 @@ public class AuthController : ControllerBase
     [AllowAnonymous]
     [HttpPost("sign-up")]
     public async Task<IActionResult> SignUp([FromServices] IUserService userService,
-        [FromBody] UserVM userVm)
+        [FromBody] UserDto userDto)
     {
-        var newUser = await userService.Create(userVm);
+        var newUser = await userService.Create(userDto);
         
         SetClaims(newUser);
         
@@ -58,16 +58,14 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> ChangePassword([FromServices] IUserService userService,
         [FromQuery] string newPass)
     {
-        var userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimsIdentity.DefaultNameClaimType)?.Value);
+        var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimsIdentity.DefaultNameClaimType)?.Value);
         
         if (await userService.GetById(userId) is not { } user)
         {
             return NotFound();
         }
 
-        user.Password = newPass;
-        
-        userService.Update(user);
+        userService.ChangePassword(user,newPass);
         return Ok();
     } 
     

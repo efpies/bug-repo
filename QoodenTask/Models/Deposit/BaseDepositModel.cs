@@ -1,17 +1,11 @@
-﻿namespace QoodenTask.Models.Deposit;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
-public class BaseDepositModel
+namespace QoodenTask.Models.Deposit;
+[JsonDerivedType(typeof(DepositCryptoModel), typeDiscriminator: nameof(DepositCryptoModel))]
+[JsonDerivedType(typeof(DepositFiatModel), typeDiscriminator: nameof(DepositFiatModel))]
+public abstract class BaseDepositModel
 {
-    private decimal _amount;
-    public decimal Amount
-    {
-        get { return _amount;}
-        set
-        {
-            if (value < 0.1m || value > 100)
-                throw new ArgumentException("Not valid amount");
-            else
-                _amount = value;
-        }
-    }
+    [Range((double)0.1m,(double)100m)]
+    public decimal Amount { get; set; }
 }

@@ -14,12 +14,12 @@ public class CurrencyService : ICurrencyService, IDisposable
         _dbContext = dbContext;
     }
     
-    public async Task<List<Currency>> GetCurrencies()
+    public async Task<List<Currency>?> GetCurrencies()
     {
         return await _dbContext.Currencies.ToListAsync();
     }
 
-    public async Task<Currency> GetCurrency(string id)
+    public async Task<Currency?> GetCurrency(string id)
     {
         return await _dbContext.Currencies.SingleOrDefaultAsync(c => c.Id == id && c.IsActive);
     }

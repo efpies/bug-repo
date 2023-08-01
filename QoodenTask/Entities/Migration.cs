@@ -7,6 +7,6 @@ public class Migration
     public int Id { get; set; }
     public string SourceName { get; set; }
     public string SourcePath { get; set; }
-    public MigrationSourceTypeEnum SourceType { get; set; }
-    public MigrationStatusEnum Status { get; set; }
+    public MigrationSourceType SourceType { get; set; }
+    public MigrationStatus Status { get; set; }
 }

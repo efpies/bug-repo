@@ -5,5 +5,5 @@ namespace QoodenTask.ServiceInterfaces;
 public interface IRateService
 {
     public Task<CurrentRates?> GetCurrentRates();
-    public decimal GetCurrentRate(string currencyId);
+    public decimal? GetCurrentRate(string currencyId);
 }

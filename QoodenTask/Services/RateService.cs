@@ -27,7 +27,8 @@ public class RateService: IRateService
         foreach (var currency in currencies)
         {
             var lastCurrencyRate = GetCurrentRate(currency.Id);
-            currentRates.Rates.Add(currency.Id, lastCurrencyRate);
+            if (lastCurrencyRate != null)
+            currentRates.Rates.Add(currency.Id, (decimal)lastCurrencyRate);
         }
 
         if (currentRates.Rates is null)
@@ -36,8 +37,8 @@ public class RateService: IRateService
         return currentRates;
     }
 
-    public decimal GetCurrentRate(string currencyId)
+    public decimal? GetCurrentRate(string currencyId)
     {
-        return _exchangeData.RateHistory.FindLast(r => r.Currency.Id == currencyId).Rate;
+        return _exchangeData.RateHistory.FindLast(r => r.Currency.Id == currencyId)?.Rate;
     }
 }

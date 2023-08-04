@@ -10,7 +10,7 @@ namespace QoodenTask.Controllers;
 public class RatesController : ControllerBase
 {
     [AllowAnonymous]
-    [HttpPost("rates")]
+    [HttpGet("rates")]
     public async Task<IActionResult> GetRates([FromServices] IRateService rateService)
     {
         var currentRates = await rateService.GetCurrentRates();

@@ -41,7 +41,7 @@ public class BalanceService : IBalanceService
 
         user.Balances.ForEach( balance =>      {
             balances[balance.Currency.Id].Balance = balance.Amount;
-            balances[balance.Currency.Id].UsdAmount = balance.Amount * _rateService.GetCurrentRate(balance.Currency.Id);
+            balances[balance.Currency.Id].UsdAmount = (decimal)(balance.Amount * _rateService.GetCurrentRate(balance.Currency.Id));
         });
 
         return balances;

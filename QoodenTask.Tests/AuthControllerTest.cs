@@ -106,21 +106,6 @@ public class AuthControllerTest
             response.Should().HaveStatusCode(HttpStatusCode.OK);
             response.Headers.Should().NotBeEmpty();
         }
-
-        /*CookieContainer cookies = new CookieContainer();
-         var uri = _client.DefaultRequestHeaders.Host;
-        // получаем из запроса все элементы с заголовком Set-Cookie
-        foreach (var cookieHeader in response.Headers.GetValues("Set-Cookie"))
-            // добавляем заголовки кук в CookieContainer
-            cookies.SetCookies(new Uri("https://localhost:44390"), cookieHeader);
-        
-        foreach (Cookie cookie in cookies.GetCookies(new Uri("https://localhost:44390")))
-            Console.WriteLine($"{cookie.Name}: {cookie.Value}");
-        
-        _client.DefaultRequestHeaders.Add("cookie", cookies.GetCookieHeader(new Uri("https://localhost:44390")));
-
-        var resp2 = await _client.GetAsync("admin/users");
-        resp2.Should().HaveStatusCode(HttpStatusCode.OK);*/
     }
     
     [Test]
@@ -194,11 +179,6 @@ public class AuthControllerTest
             
             var logoutResponse = await _client.PostAsync("auth/logou",null);
             logoutResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-            
-            /*_client = _webApplicationFactory.CreateClient();
-            var testResponse = await _client.PatchAsync($"auth/change-password?testpass",null);
-            testResponse.Should().HaveStatusCode(HttpStatusCode.Unauthorized);
-            var user2 = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserName == "AdmTest");*/
         }
         else
         {

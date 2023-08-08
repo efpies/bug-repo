@@ -9,18 +9,15 @@ namespace QoodenTask.Services;
 
 public class BalanceService : IBalanceService
 {
-    private IUserService _userService { get; set; }
-    private ICurrencyService _currencyService { get; set; }
-    private IRateService _rateService { get; set; }
-    
-    private AppDbContext _dbContext { get; set; }
-    
-    public BalanceService(IUserService userService, ICurrencyService currencyService, IRateService rateService, AppDbContext dbContext)
+    private readonly IUserService _userService;
+    private readonly ICurrencyService _currencyService;
+    private readonly IRateService _rateService;
+
+    public BalanceService(IUserService userService, ICurrencyService currencyService, IRateService rateService)
     {
         _userService = userService;
         _currencyService = currencyService;
         _rateService = rateService;
-        _dbContext = dbContext;
     }
 
     public async Task<Dictionary<string, UserBalance>?> GetBalance(int userId)

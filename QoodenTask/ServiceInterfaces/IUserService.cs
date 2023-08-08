@@ -9,7 +9,7 @@ public interface IUserService
     public Task<List<User>?> GetAll();
     public Task<User?> Create(UserDto userDto);
     public void ChangePassword(User user, string newPassword);
-    public void Update(User user);
+    public Task<User> Update(User user);
     public void Block(int userId);
     public void Unblock(int userId);
 }

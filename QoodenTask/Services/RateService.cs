@@ -6,9 +6,9 @@ namespace QoodenTask.Services;
 
 public class RateService: IRateService
 {
-    
-    private ICurrencyService _currencyService { get; set; }
-    private ExchangeData _exchangeData { get; set; }
+
+    private readonly ICurrencyService _currencyService;
+    private readonly ExchangeData _exchangeData;
 
     public RateService(ICurrencyService currencyService, ExchangeData exchangeData)
     {
@@ -24,14 +24,15 @@ public class RateService: IRateService
             Date = DateTime.Now,
             Rates = new Dictionary<string, decimal>()
         };
-        foreach (var currency in currencies)
-        {
-            var lastCurrencyRate = GetCurrentRate(currency.Id);
-            if (lastCurrencyRate != null)
-            currentRates.Rates.Add(currency.Id, (decimal)lastCurrencyRate);
-        }
+        if (currencies != null)
+            foreach (var currency in currencies)
+            {
+                var lastCurrencyRate = GetCurrentRate(currency.Id);
+                if (lastCurrencyRate != null)
+                    currentRates.Rates.Add(currency.Id, (decimal)lastCurrencyRate);
+            }
 
-        if (currentRates.Rates is null)
+        if (currentRates.Rates.Count == 0)
             return null;
 
         return currentRates;

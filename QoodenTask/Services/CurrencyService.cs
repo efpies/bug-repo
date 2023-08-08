@@ -7,7 +7,7 @@ namespace QoodenTask.Services;
 
 public class CurrencyService : ICurrencyService, IDisposable
 {
-    private AppDbContext _dbContext;
+    private readonly AppDbContext _dbContext;
 
     public CurrencyService(AppDbContext dbContext)
     {
@@ -16,7 +16,7 @@ public class CurrencyService : ICurrencyService, IDisposable
     
     public async Task<List<Currency>?> GetCurrencies()
     {
-        return await _dbContext.Currencies.ToListAsync();
+        return await _dbContext.Currencies.Where(c => c.IsActive).ToListAsync();
     }
 
     public async Task<Currency?> GetCurrency(string id)

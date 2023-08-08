@@ -8,7 +8,7 @@ namespace QoodenTask.Services;
 
 public class TransactionService : ITransactionService
 {
-    private AppDbContext _dbContext { get; set; }
+    private readonly AppDbContext _dbContext;
     
     public TransactionService(AppDbContext dbContext)
     {

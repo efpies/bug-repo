@@ -7,9 +7,9 @@ namespace QoodenTask.Services;
 
 public class DepositeService : IDepositeService
 {
-    private IUserService _userService { get; set; }
-    private ICurrencyService _currencyService { get; set; }
-    private AppDbContext _dbContext { get; set; }
+    private readonly IUserService _userService;
+    private readonly ICurrencyService _currencyService;
+    private readonly AppDbContext _dbContext;
     
     public DepositeService(IUserService userService, ICurrencyService currencyService, AppDbContext dbContext)
     {

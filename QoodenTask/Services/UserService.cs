@@ -7,7 +7,7 @@ namespace QoodenTask.Services;
 
 public class UserService : IUserService
 {
-    private AppDbContext _dbContext;
+    private readonly AppDbContext _dbContext;
 
     public UserService(AppDbContext dbContext)
     {
@@ -45,13 +45,14 @@ public class UserService : IUserService
     public async void ChangePassword(User user, string newPassword)
     {
         user.Password = newPassword;
-        Update(user);
+        await Update(user);
     }
 
-    public async void Update(User user)
+    public async Task<User> Update(User user)
     {
         _dbContext.Users.Update(user);
         await _dbContext.SaveChangesAsync();
+        return user;
     }
 
     public async void Block(int userId)
@@ -64,12 +65,12 @@ public class UserService : IUserService
         ChangingActivity(userId,true);
     }
     
-    public async void ChangingActivity(int UserId, bool IsActive)
+    public async void ChangingActivity(int userId, bool isActive)
     {
-        var user = await GetById(UserId, true);
+        var user = await GetById(userId, true);
         if (user != null)
         {
-            user.IsActive = IsActive;
+            user.IsActive = isActive;
             Update(user);
         }
     }

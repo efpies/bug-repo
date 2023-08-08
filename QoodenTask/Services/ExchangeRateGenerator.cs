@@ -9,10 +9,10 @@ namespace QoodenTask.Services;
 
 public class ExchangeRateGenerator: BackgroundService
 {
-    private ExchangeData _exchangeData { get; set; }
-    private IDbContextFactory<AppDbContext> _dbContextFactory { get; set; }
-    private readonly Random _random = new();
-    private int _rateDelayMiliseconds { get; set; }
+    private readonly ExchangeData _exchangeData;
+    private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
+    private readonly Random _random = new Random();
+    private readonly int _rateDelayMiliseconds;
 
 
     public ExchangeRateGenerator(IOptionsMonitor<RateOptions> rateOption, ExchangeData exchangeData, IDbContextFactory<AppDbContext> dbContextFactory)
@@ -46,7 +46,7 @@ public class ExchangeRateGenerator: BackgroundService
         }
     }
 
-    private void GenRates(List<Currency> currencies)
+    protected virtual void GenRates(List<Currency> currencies)
     {
         foreach (var currency in currencies)
         {

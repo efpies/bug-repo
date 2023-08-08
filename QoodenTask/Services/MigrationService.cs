@@ -8,7 +8,7 @@ namespace QoodenTask.Services;
 
 public class MigrationService: BackgroundService
 {
-    private IDbContextFactory<AppDbContext> _dbContextFactory { get; set; }
+    private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
     
     public MigrationService(IDbContextFactory<AppDbContext> dbContextFactory)
     {
@@ -17,38 +17,36 @@ public class MigrationService: BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        using (var dbContext = _dbContextFactory.CreateDbContext())
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync(stoppingToken);
+        if (!await dbContext.Migrations.AnyAsync(cancellationToken: stoppingToken))
         {
-            if (!await dbContext.Migrations.AnyAsync())
-            {
-                await AddFirstMigrations(dbContext);
-            }
+            await AddFirstMigrations(dbContext);
+        }
             
-            var migrations = await dbContext.Migrations.Where(m => m.Status == MigrationStatus.Waiting).ToListAsync();
+        var migrations = await dbContext.Migrations.Where(m => m.Status == MigrationStatus.Waiting).ToListAsync(cancellationToken: stoppingToken);
 
-            foreach (var migration in migrations)
+        foreach (var migration in migrations)
+        {
+            if (migration.SourceType == MigrationSourceType.Json)
             {
-                if (migration.SourceType == MigrationSourceType.Json)
+                if (migration.SourceName == nameof(User))
                 {
-                    if (migration.SourceName == typeof(User).Name)
-                    {
-                        var dataList = await JsonService.GetDataFromJson<User>(migration.SourcePath);
-                        await dbContext.Users.AddRangeAsync(dataList);
-                    }
-                    else if (migration.SourceName == typeof(Currency).Name)
-                    {
-                        var dataList = await JsonService.GetDataFromJson<Currency>(migration.SourcePath);
-                        await dbContext.Currencies.AddRangeAsync(dataList);
-                    }
+                    var dataList = await JsonService.GetDataFromJson<User>(migration.SourcePath);
+                    if (dataList != null) await dbContext.Users.AddRangeAsync(dataList, stoppingToken);
+                }
+                else if (migration.SourceName == nameof(Currency))
+                {
+                    var dataList = await JsonService.GetDataFromJson<Currency>(migration.SourcePath);
+                    if (dataList != null) await dbContext.Currencies.AddRangeAsync(dataList, stoppingToken);
+                }
 
-                    migration.Status = MigrationStatus.Done;
-                    dbContext.Migrations.Update(migration);
-                    await dbContext.SaveChangesAsync();
-                }
-                else
-                {
-                    Console.WriteLine($"A suitable handler was not found. Migration sourceType: {migration.SourceType}");
-                }
+                migration.Status = MigrationStatus.Done;
+                dbContext.Migrations.Update(migration);
+                await dbContext.SaveChangesAsync(stoppingToken);
+            }
+            else
+            {
+                Console.WriteLine($"A suitable handler was not found. Migration sourceType: {migration.SourceType}");
             }
         }
     }
@@ -57,14 +55,14 @@ public class MigrationService: BackgroundService
     {
         appDbContext.Migrations.Add(new Migration
         {
-            SourceName = typeof(User).Name,
+            SourceName = nameof(User),
             SourcePath = @"..\QoodenTask\Users.json",
             SourceType = MigrationSourceType.Json,
             Status = MigrationStatus.Waiting
         });
         appDbContext.Migrations.Add(new Migration
         {
-            SourceName = typeof(Currency).Name,
+            SourceName = nameof(Currency),
             SourcePath = @"..\QoodenTask\Curencies.json",
             SourceType = MigrationSourceType.Json,
             Status = MigrationStatus.Waiting

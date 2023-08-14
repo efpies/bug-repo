@@ -49,6 +49,7 @@ public class TransactionService : ITransactionService
     {
         tx.Status = newStatus;
         _dbContext.Transactions.Update(tx);
+        await _dbContext.SaveChangesAsync();
         return tx;
     }
 }

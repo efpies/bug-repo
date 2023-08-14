@@ -10,6 +10,6 @@ public interface IUserService
     public Task<User?> Create(UserDto userDto);
     public void ChangePassword(User user, string newPassword);
     public Task<User> Update(User user);
-    public void Block(int userId);
-    public void Unblock(int userId);
+    public Task<User?> Block(int userId);
+    public Task<User?> Unblock(int userId);
 }

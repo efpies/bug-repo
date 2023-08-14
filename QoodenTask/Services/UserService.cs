@@ -55,23 +55,24 @@ public class UserService : IUserService
         return user;
     }
 
-    public async void Block(int userId)
+    public async Task<User?> Block(int userId)
     {
-        ChangingActivity(userId,false);
+        return await ChangingActivity(userId,false);
     }
     
-    public async void Unblock(int userId)
+    public async Task<User?> Unblock(int userId)
     {
-        ChangingActivity(userId,true);
+        return await ChangingActivity(userId,true);
     }
     
-    public async void ChangingActivity(int userId, bool isActive)
+    public async Task<User?> ChangingActivity(int userId, bool isActive)
     {
         var user = await GetById(userId, true);
         if (user != null)
         {
             user.IsActive = isActive;
-            Update(user);
+            await Update(user);
         }
+        return user;
     }
 }

@@ -5,7 +5,6 @@ using QoodenTask.Common;
 using QoodenTask.Models;
 using QoodenTask.Models.Deposit;
 using QoodenTask.ServiceInterfaces;
-using Type = System.Type;
 
 namespace QoodenTask.Controllers;
 
@@ -36,10 +35,10 @@ public class WalletController : ControllerBase
     
     [Authorize(Roles = Constants.User)]
     [HttpPost("deposit/{currencyId}")]
-    public async Task<IActionResult> DepositFiat([FromServices] IDepositeService depositeService,
+    public async Task<IActionResult> Deposit([FromServices] IDepositeService depositeService,
         [FromBody] BaseDepositModel depositModel, string currencyId)
     {
-        Transaction tx = null;
+        Transaction? tx = null;
         
         var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimsIdentity.DefaultNameClaimType)?.Value);
         
@@ -58,7 +57,7 @@ public class WalletController : ControllerBase
     }
 
     [Authorize(Roles = Constants.User)]
-    [HttpPost("tx")]
+    [HttpGet("tx")]
     public async Task<IActionResult> GetTxs([FromServices] ITransactionService transactionService)
     {
         var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimsIdentity.DefaultNameClaimType)?.Value);

@@ -18,7 +18,7 @@ public class AdminWalletController: ControllerBase
     }
     
     [Authorize(Roles = Constants.Admin)]
-    [HttpGet("/approve/{txId}")]
+    [HttpPatch("approve/{txId}")]
     public async Task<IActionResult> ApproveTx([FromServices] ITransactionService transactionService, int txId)
     {
         if (await transactionService.GetTxById(txId) is not { } tx)
@@ -31,7 +31,7 @@ public class AdminWalletController: ControllerBase
     }
     
     [Authorize(Roles = Constants.Admin)]
-    [HttpGet("decline/{txId}")]
+    [HttpPatch("decline/{txId}")]
     public async Task<IActionResult> DeclineTx([FromServices] ITransactionService transactionService, int txId)
     {
         if (await transactionService.GetTxById(txId) is not { } tx)

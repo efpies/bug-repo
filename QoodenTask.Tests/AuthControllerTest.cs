@@ -139,7 +139,6 @@ public class AuthControllerTest
                 Password = "wrong",
                 UserId = user.Id
             });
-            var uri = _client.DefaultRequestHeaders.Host;
             var response = await _client.PostAsync("auth/login", content);
             response.Should().HaveStatusCode(HttpStatusCode.Unauthorized);
             response.Headers.Should().BeEmpty();
@@ -153,7 +152,6 @@ public class AuthControllerTest
     [Test]
     public async Task Logout_Success()
     {
-        
         _client = _webApplicationFactory.CreateClient();
         _dbContext = await _dbContextFactory.CreateDbContextAsync();
         
@@ -165,7 +163,6 @@ public class AuthControllerTest
                 Password = "admTest",
                 UserId = user.Id
             });
-            var uri = _client.DefaultRequestHeaders.Host;
             var loginResponse = await _client.PostAsync("auth/login", content);
 
             CookieContainer cookies = new CookieContainer();
@@ -222,7 +219,6 @@ public class AuthControllerTest
                 Password = "admTest",
                 UserId = user.Id
             });
-            var uri = _client.DefaultRequestHeaders.Host;
             var loginResponse = await _client.PostAsync("auth/login", content);
 
             CookieContainer cookies = new CookieContainer();

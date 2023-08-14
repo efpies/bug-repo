@@ -17,7 +17,7 @@ public class AdminUserController: ControllerBase
     }
     
     [Authorize(Roles = Constants.Admin)]
-    [HttpGet("block/{userId}")]
+    [HttpPatch("block/{userId}")]
     public async Task<IActionResult> BlockUser([FromServices] IUserService userService, int userId)
     {
         if (await userService.GetById(userId) is not { } user)
@@ -25,20 +25,20 @@ public class AdminUserController: ControllerBase
             return NotFound();
         }
         
-        userService.Block(userId);
+        await userService.Block(userId);
         return Ok();
     }
     
     [Authorize(Roles = Constants.Admin)]
-    [HttpGet("unblock/{userId}")]
+    [HttpPatch("unblock/{userId}")]
     public async Task<IActionResult> UnblockUser([FromServices] IUserService userService, int userId)
     {
-        if (await userService.GetById(userId) is not { } user)
+        if (await userService.GetById(userId, true) is not { } user)
         {
             return NotFound();
         }
         
-        userService.Unblock(userId);
+        await userService.Unblock(userId);
         return Ok();
     }
 }

@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using QoodenTask.Data;
-using QoodenTask.Models;
 using QoodenTask.ServiceInterfaces;
-using QoodenTask.Services;
 
 namespace QoodenTask.Controllers;
 

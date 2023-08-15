@@ -27,9 +27,12 @@ public class DepositeService : IDepositeService
         {
             Amount = depositFiatModel.Amount,
             User = user,
-            Currency = currency
+            Currency = currency,
+            UserId = user.Id,
+            CurrencyId = currency.Id
         };
         _dbContext.Transactions.Add(tx);
+        await _dbContext.SaveChangesAsync();
         return tx;
     }
 
@@ -45,6 +48,7 @@ public class DepositeService : IDepositeService
             Currency = currency
         };
         _dbContext.Transactions.Add(tx);
+        await _dbContext.SaveChangesAsync();
         return tx;
     }
 }

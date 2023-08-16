@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using QoodenTask.Common;
 using QoodenTask.Data;
 using QoodenTask.Models;
 using QoodenTask.ServiceInterfaces;
@@ -29,12 +30,13 @@ public class UserService : IUserService
         return await _dbContext.Users.ToListAsync();
     }
 
-    public async Task<User?> Create(UserDto userDto)
+    public async Task<User?> Create(UserDto userDto, string role = Constants.User)
     {
         var newUser = new User
         {
             UserName = userDto.UserName,
-            Password = userDto.Password
+            Password = userDto.Password,
+            Role = role
         };
         await _dbContext.Users.AddAsync(newUser);
         await _dbContext.SaveChangesAsync();
@@ -42,6 +44,11 @@ public class UserService : IUserService
         return newUser;
     }
 
+    public async void SetRole(User user, string newRole = Constants.User)
+    {
+        user.Role = newRole;
+        await Update(user);
+    }
     public async void ChangePassword(User user, string newPassword)
     {
         user.Password = newPassword;

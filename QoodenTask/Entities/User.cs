@@ -11,17 +11,7 @@ public class User
     [MinLength(4)]
     [MaxLength(8)]
     public string Password { get; set; }
-
-    private string _role = "User";
-    public string Role
-    {
-        get { return _role;}
-        set
-        {
-            if (value == "Admin")
-                _role = value;
-        }
-    }
+    public string Role { get; set; }
 
     public bool IsActive { get; set; } = true;
 

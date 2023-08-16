@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QoodenTask.Data;
-using QoodenTask.Enums;
 using QoodenTask.Models;
-using QoodenTask.Models.Deposit;
 using QoodenTask.ServiceInterfaces;
 
 namespace QoodenTask.Services;
@@ -27,21 +25,26 @@ public class BalanceService : IBalanceService
     {
         var user = await _userService.GetById(userId);
         
-        if (user.Role == "Admin") return null;
-
-        var userBalances = await GetUserBalances(user);
-        
-        var balances = new Dictionary<string, UserBalance>();
-        foreach (var currency in await _currencyService.GetCurrencies())
+        if (user != null)
         {
-            balances.Add(currency.Id, new UserBalance());
+            if (user is { Role: "Admin" }) return null;
+        
+            var userBalances = await GetUserBalances(user);
         }
-        if (user.Balances is not { })
+
+        var balances = new Dictionary<string, UserBalance>();
+        
+        var currencies = await _currencyService.GetCurrencies();
+        if (currencies != null)
+            currencies.ForEach(currency => { balances.Add(currency.Id, new UserBalance()); }
+            );
+
+        if (user is { Balances: not { } })
         {
             return balances;
         }
 
-        user.Balances.ForEach( balance =>
+        user!.Balances.ForEach( balance =>
         {
             balances[balance.CurrencyId].Balance = balance.Amount;
             balances[balance.CurrencyId].UsdAmount =

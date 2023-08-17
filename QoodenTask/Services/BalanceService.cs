@@ -48,7 +48,7 @@ public class BalanceService : IBalanceService
         {
             balances[balance.CurrencyId].Balance = balance.Amount;
             balances[balance.CurrencyId].UsdAmount =
-                76; //(decimal)(balance.Amount * _rateService.GetCurrentRate(balance.Currency.Id));
+                (decimal)(balance.Amount * _rateService.GetCurrentRate(balance.Currency.Id));
         });
 
         return balances;

@@ -1,7 +1,7 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QoodenTask.Common;
+using QoodenTask.Extensions;
 using QoodenTask.Models;
 using QoodenTask.Models.Deposit;
 using QoodenTask.ServiceInterfaces;
@@ -16,7 +16,7 @@ public class WalletController : ControllerBase
     [HttpGet("balance")]
     public async Task<IActionResult> GetBalance([FromServices] IBalanceService balanceService)
     {
-        var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimsIdentity.DefaultNameClaimType)?.Value);
+        var userId = User.GetIdFromClaims();
 
         var balances = await balanceService.GetBalance(userId);
         return Ok(balances);
@@ -39,8 +39,8 @@ public class WalletController : ControllerBase
         [FromBody] BaseDepositModel depositModel, string currencyId)
     {
         Transaction? tx = null;
-        
-        var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimsIdentity.DefaultNameClaimType)?.Value);
+
+        var userId = User.GetIdFromClaims();
         
         if (depositModel is DepositFiatModel depositFiatModel)
         {
@@ -60,7 +60,7 @@ public class WalletController : ControllerBase
     [HttpGet("tx")]
     public async Task<IActionResult> GetTxs([FromServices] ITransactionService transactionService)
     {
-        var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimsIdentity.DefaultNameClaimType)?.Value);
+        var userId = User.GetIdFromClaims();
         var txs = await transactionService.GetTxsByUser(userId);
         return Ok(txs);
     }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using QoodenTask.Extensions;
 using QoodenTask.Models;
 using QoodenTask.ServiceInterfaces;
 
@@ -58,8 +59,8 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> ChangePassword([FromServices] IUserService userService,
         [FromQuery] string newPass)
     {
-        var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimsIdentity.DefaultNameClaimType)?.Value);
-        
+        var userId = User.GetIdFromClaims();
+
         if (await userService.GetById(userId) is not { } user)
         {
             return NotFound();

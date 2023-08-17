@@ -45,7 +45,7 @@ public class TransactionService : ITransactionService
         return await ChangeStatusTx(tx, TransactionStatus.Declined);
     }
 
-    public async Task<Transaction?> ChangeStatusTx(Transaction tx, TransactionStatus newStatus)
+    private async Task<Transaction?> ChangeStatusTx(Transaction tx, TransactionStatus newStatus)
     {
         tx.Status = newStatus;
         _dbContext.Transactions.Update(tx);

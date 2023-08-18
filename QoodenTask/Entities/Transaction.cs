@@ -9,6 +9,9 @@ public class Transaction
     public int UserId { get; set; }
     public decimal Amount { get; set; }
     public TransactionStatus Status { get; set; }
+    public string Address { get; set; }
+    public string CardNumber { get; set; }
+    public string CardHolder { get; set; }
     public User User { get; set; }
     public Currency Currency { get; set; }
 }

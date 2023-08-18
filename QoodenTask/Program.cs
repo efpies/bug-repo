@@ -37,7 +37,7 @@ builder.Services.AddScoped<IRateService, RateService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBalanceService, BalanceService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
-builder.Services.AddScoped<IDepositeService, DepositeService>();
+builder.Services.AddScoped<IDepositeService, DepositService>();
 builder.Services.AddHostedService<ExchangeRateGenerator>();
 builder.Services.AddHostedService<MigrationService>();
 builder.Services.AddDbContextFactory<AppDbContext>(

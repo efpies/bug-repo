@@ -4,5 +4,6 @@ public enum TransactionStatus
 {
     Waiting = 0,
     Approved = 1,
-    Declined = 2
+    Declined = 2,
+    Canceled = 4
 }

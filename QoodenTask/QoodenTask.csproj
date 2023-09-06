@@ -16,6 +16,7 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Npgsql" Version="7.0.4" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
+        <PackageReference Include="Radzen.Blazor" Version="4.15.5" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     </ItemGroup>
 
@@ -23,6 +24,11 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Shared\TransactionData\AdminTransactionsDataGrip.razor" />
+      <_ContentIncludedByDefault Remove="Shared\TransactionData\UserTransactionsDataGrip.razor" />
     </ItemGroup>
 
 </Project>

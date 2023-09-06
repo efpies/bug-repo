@@ -44,6 +44,11 @@ public class TransactionService : ITransactionService
     {
         return await ChangeStatusTx(tx, TransactionStatus.Declined);
     }
+    
+    public async Task<Transaction?> CancelTx(Transaction tx)
+    {
+        return await ChangeStatusTx(tx, TransactionStatus.Canceled);
+    }
 
     private async Task<Transaction?> ChangeStatusTx(Transaction tx, TransactionStatus newStatus)
     {

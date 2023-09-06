@@ -41,6 +41,11 @@ public class AppDbContext : DbContext
         mt.Property(t => t.Id).HasColumnName("id").IsRequired();
         mt.Property(t => t.CurrencyId).HasColumnName("currency_id").IsRequired();
         mt.Property(t => t.UserId).HasColumnName("user_id").IsRequired();
+        mt.Property(t => t.Amount).HasColumnName("amount").IsRequired();
+        mt.Property(t => t.CreatedDate).HasColumnName("created_date").IsRequired();
+        mt.Property(t => t.Address).HasColumnName("address");
+        mt.Property(t => t.CardNumber).HasColumnName("card_number");
+        mt.Property(t => t.CardHolder).HasColumnName("card_holder");
         mt.Property(t => t.Status).HasColumnName("status").IsRequired();
         mt.Ignore(t => t.User);
         mt.Ignore(t => t.Currency);

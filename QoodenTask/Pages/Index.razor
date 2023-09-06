@@ -1,0 +1,22 @@
+﻿@page "/"
+@using System.Security.Claims
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+
+<AuthorizeView>
+    <Authorized>
+        <h1>Hello @context.User.Claims.Last(c => c.Type == ClaimTypes.Name).Value</h1>
+        <h1>Your role is @context.User.Claims.First(c => c.Type == ClaimTypes.Role).Value</h1>
+        <a href="/auth/logout">LOGOUT</a>
+    </Authorized>
+    <NotAuthorized>
+        <Login User="@context.User"/>
+    </NotAuthorized>
+</AuthorizeView>

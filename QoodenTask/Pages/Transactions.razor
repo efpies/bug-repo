@@ -1,0 +1,13 @@
+﻿@page "/txs"
+@using System.Security.Claims
+@using QoodenTask.Extensions
+
+@attribute [Authorize]
+<AuthorizeView>
+    <Authorized>
+        <PageTitle>Transactions</PageTitle>
+        
+        <TrasactionsData Role=@context.User.Claims.First(c => c.Type == ClaimsIdentity.DefaultRoleClaimType).Value
+                         UserId=@context.User.GetIdFromClaims()></TrasactionsData>
+    </Authorized>
+</AuthorizeView>

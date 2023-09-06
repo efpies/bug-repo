@@ -31,13 +31,17 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         }
     );
 
+builder.Services.AddRazorPages();
+builder.Services.AddServerSideBlazor();
+builder.Services.AddSingleton<WeatherForecastService>();
+
 builder.Services.AddSingleton<ExchangeData>();
 builder.Services.AddScoped<ICurrencyService, CurrencyService>();
 builder.Services.AddScoped<IRateService, RateService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBalanceService, BalanceService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
-builder.Services.AddScoped<IDepositeService, DepositService>();
+builder.Services.AddScoped<IDepositService, DepositService>();
 builder.Services.AddHostedService<ExchangeRateGenerator>();
 builder.Services.AddHostedService<MigrationService>();
 builder.Services.AddDbContextFactory<AppDbContext>(
@@ -88,16 +92,25 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        
+    });
 }
 
 app.UseHttpsRedirection();
 
+app.UseStaticFiles();
+
 app.UseCors();
+
+app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapBlazorHub();
 app.MapControllers();
+app.MapFallbackToPage("/_Host");
 
 app.Run();

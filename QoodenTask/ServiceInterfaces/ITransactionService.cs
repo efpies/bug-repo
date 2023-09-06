@@ -11,4 +11,5 @@ public interface ITransactionService
     public Task<Transaction?> GetTxById(int txId);
     public Task<Transaction?> ApproveTx(Transaction tx);
     public Task<Transaction?> DeclineTx(Transaction tx);
+    public Task<Transaction?> CancelTx(Transaction tx);
 }

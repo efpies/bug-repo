@@ -19,7 +19,7 @@ public class CurrencyService : ICurrencyService, IDisposable
         return await _dbContext.Currencies.Where(c => c.IsActive).ToListAsync();
     }
 
-    public async Task<Currency?> GetCurrency(string id)
+    public async Task<Currency?> GetCurrency(string? id)
     {
         return await _dbContext.Currencies.SingleOrDefaultAsync(c => c.Id == id && c.IsActive);
     }

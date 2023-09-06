@@ -6,7 +6,7 @@ using QoodenTask.ServiceInterfaces;
 
 namespace QoodenTask.Services;
 
-public class DepositService : IDepositeService
+public class DepositService : IDepositService
 {
     private readonly IUserService _userService;
     private readonly ICurrencyService _currencyService;
@@ -19,7 +19,7 @@ public class DepositService : IDepositeService
         _dbContext = dbContext;
     }
     
-    public async Task<Transaction?> DepositFiat(int userId, DepositFiatModel depositFiatModel, string currencyId)
+    public async Task<Transaction?> DepositFiat(int userId, DepositFiatModel depositFiatModel, string? currencyId)
     {
         var currency = await _currencyService.GetCurrency(currencyId);
         if (currency?.Type != CurrencyType.Fiat) throw new Exception("Incorrect currency type"); 
@@ -39,7 +39,7 @@ public class DepositService : IDepositeService
         return tx;
     }
 
-    public async Task<Transaction?> DepositCrypto(int userId, DepositCryptoModel depositCryptoModel, string currencyId)
+    public async Task<Transaction?> DepositCrypto(int userId, DepositCryptoModel depositCryptoModel, string? currencyId)
     {
         var currency = await _currencyService.GetCurrency(currencyId);
         if (currency?.Type != CurrencyType.Crypto) throw new Exception("Incorrect currency type");

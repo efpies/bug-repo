@@ -22,7 +22,8 @@ public class WalletController : ControllerBase
         return Ok(balances);
     }
     
-    [Authorize(Roles = Constants.Admin)]
+    //[Authorize(Roles = Constants.Admin)]
+    [AllowAnonymous]
     [HttpGet("balance/{userId}")]
     public async Task<IActionResult> GetBalance([FromServices] IBalanceService balanceService, [FromServices] IUserService userService,int userId)
     {
@@ -35,8 +36,8 @@ public class WalletController : ControllerBase
     
     [Authorize(Roles = Constants.User)]
     [HttpPost("deposit/{currencyId}")]
-    public async Task<IActionResult> Deposit([FromServices] IDepositeService depositeService,
-        [FromBody] BaseDepositModel depositModel, string currencyId)
+    public async Task<IActionResult> Deposit([FromServices] IDepositService depositService,
+        [FromBody] BaseDepositModel depositModel, string? currencyId)
     {
         Transaction? tx = null;
 
@@ -44,16 +45,29 @@ public class WalletController : ControllerBase
         
         if (depositModel is DepositFiatModel depositFiatModel)
         {
-            tx = await depositeService.DepositFiat(userId,
+            tx = await depositService.DepositFiat(userId,
                 depositFiatModel, currencyId);
         } else if (depositModel is DepositCryptoModel depositCryptoModel)
         {
-            tx = await depositeService.DepositCrypto(userId,
+            tx = await depositService.DepositCrypto(userId,
                 depositCryptoModel, currencyId);
         }
         if (tx is not { })
             return NotFound(currencyId);
         return Ok(tx);
+    }
+    
+    [Authorize(Roles = Constants.User)]
+    [HttpPatch("cancel/{txId}")]
+    public async Task<IActionResult> ApproveTx([FromServices] ITransactionService transactionService, int txId)
+    {
+        if (await transactionService.GetTxById(txId) is not { } tx)
+        {
+            return NotFound();
+        }
+
+        await transactionService.CancelTx(tx);
+        return Ok();
     }
 
     [Authorize(Roles = Constants.User)]

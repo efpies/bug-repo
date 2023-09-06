@@ -33,13 +33,13 @@ public class AuthController : ControllerBase
     }
 
     [Authorize(Roles = "Admin, User")]
-    [HttpPost("logou")]
+    [HttpGet("logout")]
     public async Task<IActionResult> Logout()
     {
         await HttpContext.SignOutAsync(
             CookieAuthenticationDefaults.AuthenticationScheme);
-        
-        return Ok();
+
+        return Redirect("/");
     }
     
     [AllowAnonymous]
@@ -75,6 +75,7 @@ public class AuthController : ControllerBase
         var claims = new List<Claim>
         {
             new(ClaimTypes.Name, user.Id.ToString()),
+            new(ClaimTypes.Name, user.UserName),
             new(ClaimTypes.Role, user.Role)
         };
             

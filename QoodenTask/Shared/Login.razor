@@ -1,0 +1,92 @@
+@using QoodenTask.Data
+@using System.ComponentModel.DataAnnotations
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using Microsoft.AspNetCore.Components.Server
+@using QoodenTask.Controllers
+@using QoodenTask.Models
+
+@inject IJSRuntime JsRuntime;
+@inject NavigationManager NavManager;
+
+<section class="h-100">
+		<div class="container h-100">
+			<div class="row justify-content-md-center h-100">
+                <div class="card fat">
+						<div class="card-body">
+							<h4 class="card-title row justify-content-md-center">Login</h4>
+							<RadzenTemplateForm @ref="Form" TItem="LoginDto" Data="LoginDto" Submit="OnLogin">
+                                        @* Needed to make attribute validations work *@
+                                        <DataAnnotationsValidator/>
+                                        <div class="form-group m-100">
+	                                        <div class="row justify-content-md-center h-100">
+	                                        <RadzenLabel Component="@nameof(LoginDto.UserId)" Text="User Id"/>
+	                                        <RadzenNumeric @ref="UserIdNumeric" Name="@nameof(LoginDto.UserId)" @bind-Value="LoginDto.UserId"/>
+	                                        </div>
+                                        </div>
+                                        <div class="form-group m-100">
+	                                        <div class="row justify-content-md-center h-100">
+	                                        <RadzenLabel Component="@nameof(LoginDto.Password)" Text="Password"/>
+	                                        <RadzenTextBox @ref="PasswordTextBox" Name="@nameof(LoginDto.Password)" @bind-Value="LoginDto.Password"/>
+	                                        </div>
+                                        </div>
+                                        
+                                        @* The submit button will trigger validation *@
+                                        <div class="form-group m-100">
+	                                        <div class="row justify-content-md-center h-100">
+		                                        <RadzenButton ButtonType="ButtonType.Submit" Text="Submit"/>
+		                                    </div>    
+                                        </div>
+                                        @* Needed to show all validation errors *@
+                                        <ValidationSummary/>
+                                        @CustomErrorMessage
+                            </RadzenTemplateForm>
+						</div>
+					</div>
+				</div>
+			</div>
+</section>
+
+
+@code {
+    private string? CustomErrorMessage { get; set; }
+    private LoginDto LoginDto { get; set; } = new();
+    
+    // @ref links
+    private RadzenNumeric<int> UserIdNumeric { get; set; } = null!;
+    private RadzenTextBox PasswordTextBox { get; set; } = null!;
+    private RadzenTemplateForm<LoginDto> Form { get; set; } = null!;
+
+	// This parameter is passed via attributes
+	[Parameter] public ClaimsPrincipal? User { get; set; }
+    
+    // Using JS Interop
+    private DotNetObjectReference<Login>? _dotNetHelper;
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _dotNetHelper = DotNetObjectReference.Create(this);
+            await JsRuntime.InvokeVoidAsync("LoginHelpers.setDotNetHelper", _dotNetHelper);
+        }
+    }
+
+    private async Task OnLogin()
+    {
+        await JsRuntime.InvokeVoidAsync("onLoginSubmit", Form.Element);
+    }
+
+    [JSInvokable("OnLoginSuccess")]
+    public void OnSuccess()
+    {
+        NavManager.NavigateTo("/", true);
+    }
+
+    [JSInvokable("OnLoginFailure")]
+    public void OnError(string message)
+    {
+        CustomErrorMessage = message;
+        StateHasChanged();
+    }
+}

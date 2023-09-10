@@ -28,8 +28,7 @@ public class BalanceService : IBalanceService
         if (user != null)
         {
             if (user is { Role: "Admin" }) return null;
-        
-            var userBalances = await GetUserBalances(user);
+            user.Balances = await GetUserBalances(user);
         }
 
         var balances = new Dictionary<string, UserBalance>();
@@ -47,8 +46,8 @@ public class BalanceService : IBalanceService
         user!.Balances.ForEach( balance =>
         {
             balances[balance.CurrencyId].Balance = balance.Amount;
-            balances[balance.CurrencyId].UsdAmount =
-                (decimal)(balance.Amount * _rateService.GetCurrentRate(balance.Currency.Id));
+            balances[balance.CurrencyId].UsdAmount = 777;
+            //(decimal)(balance.Amount * _rateService.GetCurrentRate(balance.Currency.Id));
         });
 
         return balances;

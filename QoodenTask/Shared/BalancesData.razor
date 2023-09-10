@@ -1,0 +1,45 @@
+﻿@using QoodenTask.Models
+@using QoodenTask.ServiceInterfaces
+
+@inject IBalanceService BalanceService
+
+@if (_balances == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Simple" AllowSorting="true" PageSize="100" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true" Data="@_balances" TItem="KeyValuePair<string,UserBalance>" ColumnWidth="100px" LogicalFilterOperator="LogicalFilterOperator.And">
+        <Columns>
+            <RadzenDataGridColumn TItem="KeyValuePair<string,UserBalance>" Property="Key" Filterable="false" Sortable="true" Title="Currency" Frozen="true" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="KeyValuePair<string,UserBalance>" Property="Value.Balance" Filterable="true" Sortable="false" Title="Balance" Frozen="true" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="KeyValuePair<string,UserBalance>" Property="Value.UsdAmount" Filterable="false" Sortable="false" Title="Usd Amount" Frozen="true" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="KeyValuePair<string,UserBalance>" Filterable="false" Sortable="false" Title="Buttons" Frozen="true" TextAlign="TextAlign.Center" Width="100px">
+                <Template Context="balance">
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="info" class="m-1" Click=@(() => ButtonMethod.InvokeAsync(balance)) Text="@ButtonName"/>
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+}
+
+@code {
+
+    [Parameter] public int UserId { get; set; }
+    [Parameter] public string ButtonName { get; set; }
+    [Parameter] public EventCallback<KeyValuePair<string, UserBalance>> ButtonMethod { get; set; }  
+    
+    
+    private Dictionary<string, UserBalance>? _balances;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await LoadBalances();
+    }
+
+    private async Task LoadBalances()
+    {
+        _balances = await BalanceService.GetBalance(UserId);
+    }
+}

@@ -51,6 +51,7 @@ else
 
 @code {
     [Parameter] public string? Role { get; set; }
+    [Parameter] public string? CurrencyId { get; set; }
     [Parameter] public int UserId { get; set; }
     
     public Dictionary<TransactionStatus, string> StatusColors { get; set; } = new Dictionary<TransactionStatus, string>()
@@ -62,7 +63,6 @@ else
     };
     
     private List<Transaction>? _transactions;
-    private int _rowCounter = 0;
 
     protected override async Task OnInitializedAsync()
     {

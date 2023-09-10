@@ -1,4 +1,6 @@
 ﻿@page "/txs"
+@page "/txs/{currencyId}"
+
 @using System.Security.Claims
 @using QoodenTask.Extensions
 
@@ -6,8 +8,14 @@
 <AuthorizeView>
     <Authorized>
         <PageTitle>Transactions</PageTitle>
-        
         <TrasactionsData Role=@context.User.Claims.First(c => c.Type == ClaimsIdentity.DefaultRoleClaimType).Value
-                         UserId=@context.User.GetIdFromClaims()></TrasactionsData>
+                             UserId=@context.User.GetIdFromClaims() CurrencyId="currencyId"></TrasactionsData>
+
     </Authorized>
 </AuthorizeView>
+
+@code{
+
+    [Parameter]public string? currencyId { get; set; }
+
+}

@@ -22,8 +22,7 @@ public class WalletController : ControllerBase
         return Ok(balances);
     }
     
-    //[Authorize(Roles = Constants.Admin)]
-    [AllowAnonymous]
+    [Authorize(Roles = Constants.Admin)]
     [HttpGet("balance/{userId}")]
     public async Task<IActionResult> GetBalance([FromServices] IBalanceService balanceService, [FromServices] IUserService userService,int userId)
     {

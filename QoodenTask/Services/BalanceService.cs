@@ -53,7 +53,7 @@ public class BalanceService : IBalanceService
         {
             return balances;
         }
-
+        
         user!.Balances.ForEach( balance =>
         {
             balances[balance.CurrencyId].Balance = balance.Amount;

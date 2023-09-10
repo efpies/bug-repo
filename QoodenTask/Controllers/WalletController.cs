@@ -41,7 +41,7 @@ public class WalletController : ControllerBase
         Transaction? tx = null;
 
         var userId = User.GetIdFromClaims();
-        
+
         if (depositModel is DepositFiatModel depositFiatModel)
         {
             tx = await depositService.DepositFiat(userId,

@@ -51,7 +51,7 @@ builder.Services.AddDbContextFactory<AppDbContext>(
                 options.UseNpgsql(builder.Configuration["DbConnection"]));
 builder.Services.AddDbContext<AppDbContext>(
     options =>
-                options.UseNpgsql(builder.Configuration["DbConnection"]), ServiceLifetime.Transient);
+        options.UseNpgsql(builder.Configuration["DbConnection"]), ServiceLifetime.Transient);
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();

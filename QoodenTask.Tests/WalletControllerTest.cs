@@ -334,7 +334,7 @@ public class WalletControllerTest
             var depositeContent = JsonContent.Create(depositModel);
 
             var response = await _client.PostAsync("wallet/deposit/ethTest", depositeContent);
-            response.Should().HaveStatusCode(HttpStatusCode.NotFound);
+            response.Should().HaveStatusCode(HttpStatusCode.BadRequest);
         }
         else
         {
@@ -395,14 +395,14 @@ public class WalletControllerTest
     {
         _client = _webApplicationFactory.CreateClient();
         _dbContext = await _dbContextFactory.CreateDbContextAsync();
-        var ethTest = new Currency()
+        var rubTest = new Currency()
         {
             Id = "rubTest",
             IsActive = true,
             Type = CurrencyType.Fiat
         };
 
-        _dbContext.Currencies.Add(ethTest);
+        _dbContext.Currencies.Add(rubTest);
         await _dbContext.SaveChangesAsync();
 
         var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserName == "UsrTest" && u.Password == "usrTest");
@@ -430,7 +430,7 @@ public class WalletControllerTest
             var depositeContent = JsonContent.Create(depositModel);
 
             var response = await _client.PostAsync("wallet/deposit/rubTest", depositeContent);
-            response.Should().HaveStatusCode(HttpStatusCode.NotFound);
+            response.Should().HaveStatusCode(HttpStatusCode.BadRequest);
         }
         else
         {

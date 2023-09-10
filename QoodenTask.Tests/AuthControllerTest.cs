@@ -171,7 +171,7 @@ public class AuthControllerTest
             
             _client.DefaultRequestHeaders.Add("cookie", cookies.GetCookieHeader(new Uri("https://localhost:44390")));
             
-            var logoutResponse = await _client.PostAsync("auth/logou",null);
+            var logoutResponse = await _client.GetAsync("auth/logout");
             logoutResponse.Should().HaveStatusCode(HttpStatusCode.OK);
         }
         else

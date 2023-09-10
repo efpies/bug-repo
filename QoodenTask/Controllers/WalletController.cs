@@ -32,7 +32,7 @@ public class WalletController : ControllerBase
         var balances = await balanceService.GetBalance(userId);
         return Ok(balances);
     }
-    
+
     [Authorize(Roles = Constants.User)]
     [HttpPost("deposit/{currencyId}")]
     public async Task<IActionResult> Deposit([FromServices] IDepositService depositService,
@@ -42,14 +42,22 @@ public class WalletController : ControllerBase
 
         var userId = User.GetIdFromClaims();
 
-        if (depositModel is DepositFiatModel depositFiatModel)
+        try
         {
-            tx = await depositService.DepositFiat(userId,
-                depositFiatModel, currencyId);
-        } else if (depositModel is DepositCryptoModel depositCryptoModel)
+            if (depositModel is DepositFiatModel depositFiatModel)
+            {
+                tx = await depositService.DepositFiat(userId,
+                    depositFiatModel, currencyId);
+            }
+            else if (depositModel is DepositCryptoModel depositCryptoModel)
+            {
+                tx = await depositService.DepositCrypto(userId,
+                    depositCryptoModel, currencyId);
+            }
+        }
+        catch (Exception ex) when (ex.Message.Equals("Incorrect currency type"))
         {
-            tx = await depositService.DepositCrypto(userId,
-                depositCryptoModel, currencyId);
+            return BadRequest();
         }
         if (tx is not { })
             return NotFound(currencyId);

@@ -7,4 +7,5 @@ namespace QoodenTask.ServiceInterfaces;
 public interface IBalanceService
 {
     public Task<Dictionary<string, UserBalance>?> GetBalance(int userId);
+    public Task<decimal> GetUsdBalance(int userId);
 }

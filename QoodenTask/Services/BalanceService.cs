@@ -21,6 +21,17 @@ public class BalanceService : IBalanceService
         _dbContext = dbContext;
     }
 
+    public async Task<decimal> GetUsdBalance(int userId)
+    {
+        var balances = await GetBalance(userId);
+        if (balances != null)
+        {
+            return balances.Select(b => b.Value.UsdAmount).Sum();
+        }
+
+        return 0;
+    }
+
     public async Task<Dictionary<string, UserBalance>?> GetBalance(int userId)
     {
         var user = await _userService.GetById(userId);

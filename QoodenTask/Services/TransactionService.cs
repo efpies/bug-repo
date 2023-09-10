@@ -25,8 +25,12 @@ public class TransactionService : ITransactionService
         return await _dbContext.Transactions.Where(t => t.User.Id == userId).ToListAsync();
     }
     
-    public async Task<List<Transaction>?> GetTxs()
+    public async Task<List<Transaction>?> GetTxs(string? currencyId = null)
     {
+        if (currencyId != null)
+        {
+            return await _dbContext.Transactions.Where(tx => tx.CurrencyId == currencyId).ToListAsync();
+        }
         return await _dbContext.Transactions.ToListAsync();
     }
     

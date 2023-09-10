@@ -6,6 +6,7 @@ using QoodenTask.Data;
 using QoodenTask.Options;
 using QoodenTask.ServiceInterfaces;
 using QoodenTask.Services;
+using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +43,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBalanceService, BalanceService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IDepositService, DepositService>();
+builder.Services.AddScoped<DialogService>();
 builder.Services.AddHostedService<ExchangeRateGenerator>();
 builder.Services.AddHostedService<MigrationService>();
 builder.Services.AddDbContextFactory<AppDbContext>(

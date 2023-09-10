@@ -1,16 +1,13 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization.Metadata;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using QoodenTask.Common;
-using QoodenTask.Controllers;
 using QoodenTask.Data;
+using QoodenTask.Enums;
 using QoodenTask.Models;
 using QoodenTask.Models.Deposit;
 using QoodenTask.Services;
@@ -105,7 +102,7 @@ public class WalletControllerTest
         {
             Id = "ethTest",
             IsActive = true,
-            Type = "Crypto"
+            Type = CurrencyType.Crypto
         };
 
         _dbContext.Currencies.Add(ethTest);
@@ -161,7 +158,7 @@ public class WalletControllerTest
         {
             Id = "ethTest",
             IsActive = true,
-            Type = "Crypto"
+            Type = CurrencyType.Crypto
         };
 
         _dbContext.Currencies.Add(ethTest);
@@ -256,7 +253,7 @@ public class WalletControllerTest
         {
             Id = "rubTest",
             IsActive = true,
-            Type = "Fiat"
+            Type = CurrencyType.Fiat
         };
 
         _dbContext.Currencies.Add(ethTest);
@@ -305,7 +302,7 @@ public class WalletControllerTest
         {
             Id = "ethTest",
             IsActive = true,
-            Type = "Crypto"
+            Type = CurrencyType.Crypto
         };
 
         _dbContext.Currencies.Add(ethTest);
@@ -354,7 +351,7 @@ public class WalletControllerTest
         {
             Id = "ethTest",
             IsActive = true,
-            Type = "Crypto"
+            Type = CurrencyType.Crypto
         };
 
         _dbContext.Currencies.Add(ethTest);
@@ -402,7 +399,7 @@ public class WalletControllerTest
         {
             Id = "rubTest",
             IsActive = true,
-            Type = "Fiat"
+            Type = CurrencyType.Fiat
         };
 
         _dbContext.Currencies.Add(ethTest);

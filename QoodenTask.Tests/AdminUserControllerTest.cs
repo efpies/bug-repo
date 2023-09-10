@@ -6,9 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using QoodenTask.Common;
-using QoodenTask.Controllers;
 using QoodenTask.Data;
-using QoodenTask.Enums;
 using QoodenTask.Models;
 using QoodenTask.Services;
 

@@ -6,11 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using QoodenTask.Common;
-using QoodenTask.Controllers;
 using QoodenTask.Data;
 using QoodenTask.Enums;
 using QoodenTask.Models;
-using QoodenTask.Models.Deposit;
 using QoodenTask.Services;
 
 namespace QoodenTask.Tests;
@@ -103,7 +101,7 @@ public class AdminWalletControllerTest
         {
             Id = "ethTest",
             IsActive = true,
-            Type = "Crypto"
+            Type = CurrencyType.Crypto
         };
 
         _dbContext.Currencies.Add(ethTest);
@@ -165,7 +163,7 @@ public class AdminWalletControllerTest
         {
             Id = "ethTest",
             IsActive = true,
-            Type = "Crypto"
+            Type = CurrencyType.Crypto
         };
 
         _dbContext.Currencies.Add(ethTest);
@@ -278,7 +276,7 @@ public class AdminWalletControllerTest
         {
             Id = "ethTest",
             IsActive = true,
-            Type = "Crypto"
+            Type = CurrencyType.Crypto
         };
 
         _dbContext.Currencies.Add(ethTest);

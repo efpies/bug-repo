@@ -2,15 +2,13 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Newtonsoft.Json;
 using QoodenTask.Data;
+using QoodenTask.Enums;
 using QoodenTask.Models;
 using QoodenTask.Services;
-using QoodenTask.Tests.Mocks;
 
 namespace QoodenTask.Tests;
 
@@ -67,13 +65,13 @@ public class RateControllerTest
         {
             Id = "trxTest",
             IsActive = true,
-            Type = "Crypto"
+            Type = CurrencyType.Crypto
         });
         _dbContext.Currencies.Add(new Currency()
         {
             Id = "ethTest",
             IsActive = true,
-            Type = "Crypto"
+            Type = CurrencyType.Crypto
         });
         await _dbContext.SaveChangesAsync();
     }

@@ -19,46 +19,32 @@ public class DepositService : IDepositService
         _dbContext = dbContext;
     }
     
-    public async Task<Transaction?> DepositFiat(int userId, DepositFiatModel depositFiatModel, string? currencyId)
+    public async Task<Transaction?> Deposit(int userId, BaseDepositModel depositModel, string? currencyId)
     {
         var currency = await _currencyService.GetCurrency(currencyId);
-        if (currency?.Type != CurrencyType.Fiat) throw new Exception("Incorrect currency type"); 
         var user = await _userService.GetById(userId);
+        if (user == null || currency == null) return null;
         var tx = new Transaction
         {
-            Amount = depositFiatModel.Amount,
+            Amount = depositModel.Amount,
             CurrencyId = currency.Id,
-            UserId = user!.Id,
-            CardNumber = depositFiatModel.CardNumber,
-            CardHolder = depositFiatModel.CardHolder,
+            UserId = user.Id,
             User = user,
             Currency = currency
         };
+        if (depositModel is DepositFiatModel depositFiatModel)
+        {
+            if (currency.Type != CurrencyType.Fiat) throw new Exception("Incorrect currency type");
+            tx.CardNumber = depositFiatModel.CardNumber;
+            tx.CardHolder = depositFiatModel.CardHolder;
+        }
+        else if (depositModel is DepositCryptoModel depositCryptoModel)
+        {
+            if (currency.Type != CurrencyType.Crypto) throw new Exception("Incorrect currency type");
+            tx.Address = depositCryptoModel.Address;
+        }
         _dbContext.Transactions.Add(tx);
         await _dbContext.SaveChangesAsync();
         return tx;
-    }
-
-    public async Task<Transaction?> DepositCrypto(int userId, DepositCryptoModel depositCryptoModel, string? currencyId)
-    {
-        var currency = await _currencyService.GetCurrency(currencyId);
-        if (currency?.Type != CurrencyType.Crypto) throw new Exception("Incorrect currency type");
-        var user = await _userService.GetById(userId);
-        if (user != null)
-        {
-            var tx = new Transaction
-            {
-                Amount = depositCryptoModel.Amount,
-                CurrencyId = currency.Id,
-                UserId = user.Id,
-                Address = depositCryptoModel.Address,
-                User = user,
-                Currency = currency
-            };
-            _dbContext.Transactions.Add(tx);
-            await _dbContext.SaveChangesAsync();
-            return tx;
-        }
-        return null;
     }
 }

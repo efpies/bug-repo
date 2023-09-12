@@ -37,6 +37,6 @@
 
     private async Task OnDeposit()
     {
-        await DepositService.DepositFiat(UserId, _depositFiatModel, CurrencyId);
+        await DepositService.Deposit(UserId, _depositFiatModel, CurrencyId);
     }
 }

@@ -32,6 +32,6 @@
 
     private async Task OnDeposit()
     {
-        await DepositService.DepositCrypto(UserId, _depositCryptoModel, CurrencyId);
+        await DepositService.Deposit(UserId, _depositCryptoModel, CurrencyId);
     }
 }

@@ -17,7 +17,7 @@ public class UserService : IUserService
     
     public async Task<bool> CheckIfExistById(int id, bool includeBlocked = false)
     {
-        return id == await _dbContext.Users.Where(u => u.Id == id && (includeBlocked || u.IsActive)).Select(u => u.Id).SingleOrDefaultAsync();
+        return _dbContext.Users.Any(u => u.Id == id && (includeBlocked || u.IsActive));
     }    
     
     public async Task<User?> GetById(int id, bool includeBlocked = false)

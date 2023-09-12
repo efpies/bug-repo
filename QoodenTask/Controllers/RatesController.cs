@@ -11,9 +11,6 @@ public class RatesController : ControllerBase
     public async Task<IActionResult> GetRates([FromServices] IRateService rateService)
     {
         var currentRates = await rateService.GetCurrentRates();
-
-        if (currentRates is null)
-            return NotFound(currentRates);
         
         return Ok(currentRates);
     }

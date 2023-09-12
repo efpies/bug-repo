@@ -22,7 +22,7 @@ public class TransactionService : ITransactionService
 
     public async Task<List<Transaction>?> GetTxsByUser(int userId)
     {
-        return await _dbContext.Transactions.Where(t => t.User.Id == userId).ToListAsync();
+        return await _dbContext.Transactions.Where(t => t.UserId == userId).ToListAsync();
     }
     
     public async Task<List<Transaction>?> GetTxs(string? currencyId = null)

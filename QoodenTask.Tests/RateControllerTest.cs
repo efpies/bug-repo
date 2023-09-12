@@ -111,6 +111,7 @@ public class RateControllerTest
         }
     }
     
+    [Test]
     public async Task GetRates_NotFound()
     {
         var response = await _client.GetAsync("/rates");

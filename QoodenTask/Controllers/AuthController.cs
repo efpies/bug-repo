@@ -57,13 +57,18 @@ public class AuthController : ControllerBase
     [Authorize(Roles = "Admin, User")]
     [HttpPatch("change-password")]
     public async Task<IActionResult> ChangePassword([FromServices] IUserService userService,
-        [FromQuery] string newPass)
+        [FromQuery] string newPass, [FromQuery] string currentPass)
     {
         var userId = User.GetIdFromClaims();
 
         if (await userService.GetById(userId) is not { } user)
         {
             return NotFound();
+        }
+
+        if (currentPass != user.Password)
+        {
+            return Unauthorized();
         }
 
         userService.ChangePassword(user,newPass);

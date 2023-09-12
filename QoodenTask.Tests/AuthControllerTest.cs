@@ -227,7 +227,7 @@ public class AuthControllerTest
             
             _client.DefaultRequestHeaders.Add("cookie", cookies.GetCookieHeader(new Uri("https://localhost:44390")));
             
-            var response = await _client.PatchAsync($"auth/change-password?newPass=newpass",null);
+            var response = await _client.PatchAsync($"auth/change-password?newPass=newpass&currentPass=admTest",null);
             response.Should().HaveStatusCode(HttpStatusCode.OK);
 
             user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserName == "AdmTest" && u.Password == "newpass");
@@ -243,7 +243,15 @@ public class AuthControllerTest
     public async Task ChangePassword_FailOnUnauthorized()
     {
         _client = _webApplicationFactory.CreateClient();
-        var testResponse = await _client.PatchAsync($"auth/change-password?newPass=newpass",null);
+        var testResponse = await _client.PatchAsync($"auth/change-password?newPass=newpass&currentPass=admTest",null);
+        testResponse.Should().HaveStatusCode(HttpStatusCode.Unauthorized);
+    }
+    
+    [Test]
+    public async Task ChangePassword_FailOnWrongCurrentPass()
+    {
+        _client = _webApplicationFactory.CreateClient();
+        var testResponse = await _client.PatchAsync($"auth/change-password?newPass=newpass&currentPass=wrongPass",null);
         testResponse.Should().HaveStatusCode(HttpStatusCode.Unauthorized);
     }
 }

@@ -30,7 +30,7 @@ public class UserService : IUserService
         return await _dbContext.Users.ToListAsync();
     }
 
-    public async Task<User?> Create(UserDto userDto, string role = Constants.User)
+    public async Task<User?> Create(UserDto userDto, string role = Roles.User)
     {
         var newUser = new User
         {
@@ -44,7 +44,7 @@ public class UserService : IUserService
         return newUser;
     }
 
-    public async void SetRole(User user, string newRole = Constants.User)
+    public async void SetRole(User user, string newRole = Roles.User)
     {
         user.Role = newRole;
         await Update(user);

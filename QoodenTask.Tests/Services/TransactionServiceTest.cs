@@ -78,14 +78,14 @@ public class TransactionServiceTest
         {
             UserName = "AdmTest",
             Password = "admTest",
-            Role = Constants.Admin
+            Role = Roles.Admin
         });
 
         _dbContext.Users.Add(new User()
         {
             UserName = "testUser",
             Password = "testUser",
-            Role = Constants.User
+            Role = Roles.User
         });
 
         await _dbContext.SaveChangesAsync();

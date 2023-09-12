@@ -10,14 +10,14 @@ namespace QoodenTask.Controllers;
 [Route("admin/wallets")]
 public class AdminWalletController: ControllerBase
 {
-    [Authorize(Roles = Constants.Admin)]
+    [Authorize(Roles = Roles.Admin)]
     [HttpGet("tx")]
     public async Task<IActionResult> GetTxs([FromServices] ITransactionService transactionService)
     {
         return Ok(await transactionService.GetTxs());
     }
     
-    [Authorize(Roles = Constants.Admin)]
+    [Authorize(Roles = Roles.Admin)]
     [HttpPatch("approve/{txId}")]
     public async Task<IActionResult> ApproveTx([FromServices] ITransactionService transactionService, int txId)
     {
@@ -30,7 +30,7 @@ public class AdminWalletController: ControllerBase
         return Ok();
     }
     
-    [Authorize(Roles = Constants.Admin)]
+    [Authorize(Roles = Roles.Admin)]
     [HttpPatch("decline/{txId}")]
     public async Task<IActionResult> DeclineTx([FromServices] ITransactionService transactionService, int txId)
     {

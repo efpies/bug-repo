@@ -14,7 +14,7 @@ else
     <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Simple" AllowSorting="true" PageSize="100" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true" Data="@_transactions" TItem="Transaction" ColumnWidth="100px" LogicalFilterOperator="LogicalFilterOperator.And" CellRender="CellRender">
         <Columns>
             <RadzenDataGridColumn TItem="Transaction" Property="CreatedDate" Filterable="false" Sortable="true" Title="Date" Frozen="true" TextAlign="TextAlign.Center" />
-            @if (Role == Constants.Admin)
+            @if (Role == Roles.Admin)
             {
                 <RadzenDataGridColumn TItem="Transaction" Property="UserId" Filterable="true" Sortable="false" Title="User Id" Frozen="true" TextAlign="TextAlign.Center" />
             }
@@ -25,7 +25,7 @@ else
                 <Template Context="tx">
                     @switch (Role)
                     {
-                        case Constants.Admin:
+                        case Roles.Admin:
                         {
                             @if (tx.Status == TransactionStatus.Waiting)
                             {
@@ -34,7 +34,7 @@ else
                             }
                             break;
                         }
-                        case Constants.User:
+                        case Roles.User:
                         {
                             @if (tx.Status == TransactionStatus.Waiting)
                             {
@@ -79,9 +79,9 @@ else
     {
         if (Role != null)
         {
-            if (Role == Constants.Admin)
+            if (Role == Roles.Admin)
                 _transactions = await TransactionService.GetTxs();
-            else if (Role == Constants.User)
+            else if (Role == Roles.User)
             {
                 _transactions = await TransactionService.GetTxsByUser(UserId);
             }

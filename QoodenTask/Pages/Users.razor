@@ -3,7 +3,7 @@
 @using QoodenTask.Common
 @using QoodenTask.Extensions
 
-@attribute [Authorize(Roles = Constants.Admin)]
+@attribute [Authorize(Roles = Roles.Admin)]
 <AuthorizeView>
     <Authorized>
         <PageTitle>Users</PageTitle>

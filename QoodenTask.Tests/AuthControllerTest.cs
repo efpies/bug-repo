@@ -65,7 +65,7 @@ public class AuthControllerTest
         {
             UserName = "AdmTest",
             Password = "admTest",
-            Role = Constants.Admin
+            Role = Roles.Admin
         });
         await _dbContext.SaveChangesAsync();
     }

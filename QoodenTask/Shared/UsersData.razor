@@ -23,7 +23,7 @@ else
             <RadzenDataGridColumn TItem="KeyValuePair<User,decimal>" Filterable="false" Sortable="false" Title="Buttons" Frozen="true" TextAlign="TextAlign.Center" Width="200px">
                 <Template Context="userBalance">
                     <RadzenButton ButtonStyle="ButtonStyle.Primary" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="info" class="m-1" Click=@(() => ShowUserInfo(userBalance.Key)) Text="Show"/>
-                    @if (userBalance.Key.Role == Constants.User)
+                    @if (userBalance.Key.Role == Roles.User)
                     {
                         <RadzenButton ButtonStyle="ButtonStyle.Secondary" Variant="Variant.Flat" Shade="Shade.Lighter" class="m-1" Click=@(() => ShowUserTxs(userBalance.Key)) Text="Transactions"/>
                     }

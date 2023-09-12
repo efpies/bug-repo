@@ -12,7 +12,7 @@ namespace QoodenTask.Controllers;
 [Route("wallet")]
 public class WalletController : ControllerBase
 {
-    [Authorize(Roles = Constants.User)]
+    [Authorize(Roles = Roles.User)]
     [HttpGet("balance")]
     public async Task<IActionResult> GetBalance([FromServices] IBalanceService balanceService)
     {
@@ -22,7 +22,7 @@ public class WalletController : ControllerBase
         return Ok(balances);
     }
     
-    [Authorize(Roles = Constants.Admin)]
+    [Authorize(Roles = Roles.Admin)]
     [HttpGet("balance/{userId}")]
     public async Task<IActionResult> GetBalance([FromServices] IBalanceService balanceService, [FromServices] IUserService userService,int userId)
     {
@@ -33,7 +33,7 @@ public class WalletController : ControllerBase
         return Ok(balances);
     }
 
-    [Authorize(Roles = Constants.User)]
+    [Authorize(Roles = Roles.User)]
     [HttpPost("deposit/{currencyId}")]
     public async Task<IActionResult> Deposit([FromServices] IDepositService depositService,
         [FromBody] BaseDepositModel depositModel, string? currencyId)
@@ -64,7 +64,7 @@ public class WalletController : ControllerBase
         return Ok(tx);
     }
     
-    [Authorize(Roles = Constants.User)]
+    [Authorize(Roles = Roles.User)]
     [HttpPatch("cancel/{txId}")]
     public async Task<IActionResult> ApproveTx([FromServices] ITransactionService transactionService, int txId)
     {
@@ -77,7 +77,7 @@ public class WalletController : ControllerBase
         return Ok();
     }
 
-    [Authorize(Roles = Constants.User)]
+    [Authorize(Roles = Roles.User)]
     [HttpGet("tx")]
     public async Task<IActionResult> GetTxs([FromServices] ITransactionService transactionService)
     {

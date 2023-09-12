@@ -78,7 +78,7 @@ public class BalanceServiceTest
         {
             UserName = "testUser",
             Password = "testUser",
-            Role = Constants.User
+            Role = Roles.User
         });
 
         await _dbContext.SaveChangesAsync();

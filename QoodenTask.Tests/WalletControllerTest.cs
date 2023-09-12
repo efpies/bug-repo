@@ -67,14 +67,14 @@ public class WalletControllerTest
         {
             UserName = "AdmTest",
             Password = "admTest",
-            Role = Constants.Admin
+            Role = Roles.Admin
         });
         
         _dbContext.Users.Add(new User
         {
             UserName = "UsrTest",
             Password = "usrTest",
-            Role = Constants.User
+            Role = Roles.User
         });
         
         await _dbContext.SaveChangesAsync();

@@ -29,20 +29,31 @@ public class MigrationService: BackgroundService
         {
             if (migration.SourceType == MigrationSourceType.Json)
             {
-                if (migration.SourceName == nameof(User))
+                try
                 {
-                    var dataList = await JsonService.GetDataFromJson<User>(migration.SourcePath);
-                    if (dataList != null) await dbContext.Users.AddRangeAsync(dataList, stoppingToken);
-                }
-                else if (migration.SourceName == nameof(Currency))
-                {
-                    var dataList = await JsonService.GetDataFromJson<Currency>(migration.SourcePath);
-                    if (dataList != null) await dbContext.Currencies.AddRangeAsync(dataList, stoppingToken);
-                }
+                    if (migration.SourceName == nameof(User))
+                    {
+                        var dataList = await JsonService.GetDataFromJson<User>(migration.SourcePath);
+                        if (dataList != null) await dbContext.Users.AddRangeAsync(dataList, stoppingToken);
+                    }
+                    else if (migration.SourceName == nameof(Currency))
+                    {
+                        var dataList = await JsonService.GetDataFromJson<Currency>(migration.SourcePath);
+                        if (dataList != null) await dbContext.Currencies.AddRangeAsync(dataList, stoppingToken);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Invalid SourceName: {migration.SourceName}");
+                    }
 
-                migration.Status = MigrationStatus.Done;
-                dbContext.Migrations.Update(migration);
-                await dbContext.SaveChangesAsync(stoppingToken);
+                    migration.Status = MigrationStatus.Done;
+                    dbContext.Migrations.Update(migration);
+                    await dbContext.SaveChangesAsync(stoppingToken);
+                }
+                catch(Exception exception)
+                {
+                    Console.WriteLine($"Error: {exception.Message}");
+                }
             }
             else
             {

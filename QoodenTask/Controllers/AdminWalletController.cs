@@ -14,7 +14,7 @@ public class AdminWalletController: ControllerBase
     [HttpGet("tx")]
     public async Task<IActionResult> GetTxs([FromServices] ITransactionService transactionService)
     {
-        return Ok(await transactionService.GetTxs());
+        return Ok(await transactionService.GetAllTxs());
     }
     
     [Authorize(Roles = Roles.Admin)]

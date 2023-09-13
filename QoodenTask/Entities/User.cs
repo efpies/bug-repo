@@ -15,6 +15,6 @@ public class User
 
     public bool IsActive { get; set; } = true;
 
-    public List<Balance> Balances { get; set; }
+    public List<Balance>? Balances { get; set; }
     public List<Transaction> Transactions { get; set; }
 }

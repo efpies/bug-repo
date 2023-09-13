@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using QoodenTask.Common;
 using QoodenTask.Data;
 using QoodenTask.Models;
 using QoodenTask.ServiceInterfaces;
@@ -32,40 +33,41 @@ public class BalanceService : IBalanceService
         return 0;
     }
 
-    public async Task<Dictionary<string, UserBalance>?> GetBalance(int userId)
+    public async Task<IDictionary<string, UserBalance>?> GetBalance(int userId)
     {
         var user = await _userService.GetById(userId);
         
         if (user != null)
         {
-            if (user is { Role: "Admin" }) return null;
-            user.Balances = await GetUserBalances(user);
+            if (user is { Role: Roles.Admin }) return null;
+            user.Balances = await GetUserBalances(user) as List<Balance>;
         }
 
         var balances = new Dictionary<string, UserBalance>();
         
-        var currencies = await _currencyService.GetCurrencies();
-        if (currencies != null)
-            currencies.ForEach(currency => { balances.Add(currency.Id, new UserBalance()); }
-            );
+        var currencies = (List<Currency>?) await _currencyService.GetCurrencies();
+        currencies?.ForEach(currency => { balances.Add(currency.Id, new UserBalance()); }
+        );
 
-        if (user is { Balances: not { } })
+        if (user is { Balances: null })
         {
             return balances;
         }
+
+        var currentRates = await _rateService.GetCurrentRates();
         
         user!.Balances.ForEach( balance =>
         {
             balances[balance.CurrencyId].Balance = balance.Amount;
-            balances[balance.CurrencyId].UsdAmount = 777;
-            //(decimal)(balance.Amount * _rateService.GetCurrentRate(balance.Currency.Id));
+            balances[balance.CurrencyId].UsdAmount = 
+                (currentRates?.Rates[balance.Currency.Id] ?? 0 * balance.Amount);
         });
 
         return balances;
     }
-    public async Task<List<Balance>?> GetUserBalances(User user)
+
+    private async Task<IList<Balance>?> GetUserBalances(User user)
     {
-        var balances = await _dbContext.Balances.Where(b => b.UserId == user.Id).ToListAsync();
-        return balances;
+        return await _dbContext.Balances.Where(b => b.UserId == user.Id).ToListAsync();
     }
 }

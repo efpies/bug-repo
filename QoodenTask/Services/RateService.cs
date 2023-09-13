@@ -29,7 +29,7 @@ public class RateService: IRateService
             {
                 var lastCurrencyRate = GetCurrentRate(currency.Id);
                 if (lastCurrencyRate != null)
-                    currentRates.Rates.Add(currency.Id, (decimal)lastCurrencyRate);
+                    currentRates.Rates.Add(currency.Id, lastCurrencyRate.Value);
             }
 
         if (currentRates.Rates.Count == 0)

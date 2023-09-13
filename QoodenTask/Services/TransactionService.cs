@@ -15,17 +15,17 @@ public class TransactionService : ITransactionService
         _dbContext = dbContext;
     }
     
-    public async Task<List<Transaction>?> GetTxsByStatus(TransactionStatus status)
+    public async Task<IList<Transaction>?> GetTxsByStatus(TransactionStatus status)
     {
         return await _dbContext.Transactions.Where(t => t.Status == status).ToListAsync();
     }
 
-    public async Task<List<Transaction>?> GetTxsByUser(int userId)
+    public async Task<IList<Transaction>?> GetTxsByUser(int userId)
     {
         return await _dbContext.Transactions.Where(t => t.UserId == userId).ToListAsync();
     }
     
-    public async Task<List<Transaction>?> GetTxs(string? currencyId = null)
+    public async Task<IList<Transaction>?> GetAllTxs(string? currencyId = null)
     {
         if (currencyId != null)
         {

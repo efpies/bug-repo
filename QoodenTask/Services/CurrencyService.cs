@@ -14,7 +14,7 @@ public class CurrencyService : ICurrencyService, IDisposable
         _dbContext = dbContext;
     }
     
-    public async Task<List<Currency>?> GetCurrencies()
+    public async Task<IList<Currency>?> GetCurrencies()
     {
         return await _dbContext.Currencies.Where(c => c.IsActive).ToListAsync();
     }

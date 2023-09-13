@@ -25,12 +25,12 @@ public class UserService : IUserService
         return await _dbContext.Users.SingleOrDefaultAsync(u => u.Id == id && (includeBlocked || u.IsActive));
     }
 
-    public async Task<List<User>?> GetAll()
+    public async Task<IList<User>?> GetAll()
     {
         return await _dbContext.Users.ToListAsync();
     }
 
-    public async Task<User?> Create(UserDto userDto, string role = Roles.User)
+    public async Task<User?> Create(UserDto userDto, string role)
     {
         var newUser = new User
         {

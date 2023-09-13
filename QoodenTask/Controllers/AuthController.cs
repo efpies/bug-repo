@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using QoodenTask.Common;
 using QoodenTask.Extensions;
 using QoodenTask.Models;
 using QoodenTask.ServiceInterfaces;
@@ -47,7 +48,7 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> SignUp([FromServices] IUserService userService,
         [FromBody] UserDto userDto)
     {
-        var newUser = await userService.Create(userDto);
+        var newUser = await userService.Create(userDto, Roles.User);
         
         SetClaims(newUser);
         

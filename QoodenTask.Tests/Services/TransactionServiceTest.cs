@@ -126,7 +126,7 @@ public class TransactionServiceTest
         using (var scope = serviceScopeFactory.CreateScope())
         {
             var transactionService = scope.ServiceProvider.GetRequiredService<ITransactionService>();
-            var txs = await transactionService.GetTxs();
+            var txs = await transactionService.GetAllTxs();
             txs!.Count.Should().Be(2);
         }
     }

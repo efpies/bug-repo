@@ -80,10 +80,10 @@ else
         if (Role != null)
         {
             if (Role == Roles.Admin)
-                _transactions = await TransactionService.GetTxs();
+                _transactions = (List<Transaction>?)await TransactionService.GetAllTxs();
             else if (Role == Roles.User)
             {
-                _transactions = await TransactionService.GetTxsByUser(UserId);
+                _transactions = (List<Transaction>?)await TransactionService.GetTxsByUser(UserId);
             }
         }
     }

@@ -33,15 +33,14 @@ public class WalletController : ControllerBase
         return Ok(balances);
     }
 
-    //[Authorize(Roles = Roles.User)]
-    [AllowAnonymous]
+    [Authorize(Roles = Roles.User)]
     [HttpPost("deposit/{currencyId}")]
     public async Task<IActionResult> Deposit([FromServices] IDepositService depositService,
         [FromBody] BaseDepositModel depositModel, string? currencyId)
     {
-        Transaction? tx = null;
+        Transaction? tx;
 
-        var userId = 1;//User.GetIdFromClaims();
+        var userId = User.GetIdFromClaims();
 
         try
         {
@@ -52,7 +51,7 @@ public class WalletController : ControllerBase
         {
             return BadRequest();
         }
-        if (tx is not { })
+        if (tx is null)
             return NotFound(currencyId);
         return Ok(tx);
     }

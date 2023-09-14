@@ -89,6 +89,7 @@ public class AdminWalletControllerTest
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
+        _dbContextFactory.CreateDbContext().Database.EnsureDeleted();
         _webApplicationFactory.Dispose();
     }
 

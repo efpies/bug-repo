@@ -116,6 +116,7 @@ public class TransactionServiceTest
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
+        _dbContextFactory.CreateDbContext().Database.EnsureDeleted();
         _webApplicationFactory.Dispose();
     }
 

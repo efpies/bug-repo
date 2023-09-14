@@ -80,6 +80,7 @@ public class AuthControllerTest
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
+        _dbContextFactory.CreateDbContext().Database.EnsureDeleted();
         _webApplicationFactory.Dispose();
     }
 

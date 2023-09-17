@@ -42,6 +42,10 @@ public class BalanceService : IBalanceService
             if (user is { Role: Roles.Admin }) return null;
             user.Balances = await GetUserBalances(user) as List<Balance>;
         }
+        else
+        {
+            throw new Exception("Incorrect user id");
+        }
 
         var balances = new Dictionary<string, UserBalance>();
         
@@ -60,7 +64,7 @@ public class BalanceService : IBalanceService
         {
             balances[balance.CurrencyId].Balance = balance.Amount;
             balances[balance.CurrencyId].UsdAmount = 
-                (currentRates?.Rates[balance.Currency.Id] ?? 0 * balance.Amount);
+                ( balance.Amount * currentRates?.Rates[balance.Currency.Id] ?? 0 );
         });
 
         return balances;

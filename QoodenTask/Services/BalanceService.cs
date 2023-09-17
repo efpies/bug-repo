@@ -64,7 +64,7 @@ public class BalanceService : IBalanceService
         {
             balances[balance.CurrencyId].Balance = balance.Amount;
             balances[balance.CurrencyId].UsdAmount = 
-                ( balance.Amount * currentRates?.Rates[balance.Currency.Id] ?? 0 );
+                ( balance.Amount * currentRates?.Rates[balance.CurrencyId] ?? 0 );
         });
 
         return balances;

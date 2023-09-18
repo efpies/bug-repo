@@ -5,18 +5,16 @@ using QoodenTask.ServiceInterfaces;
 
 namespace QoodenTask.Controllers;
 
-[Authorize]
+[Authorize(Roles = Roles.Admin)]
 [Route("admin/users")]
 public class AdminUserController: ControllerBase
 {
-    [Authorize(Roles = Roles.Admin)]
     [HttpGet]
     public async Task<IActionResult> GetUsers([FromServices] IUserService userService)
     {
         return Ok(await userService.GetAll());
     }
     
-    [Authorize(Roles = Roles.Admin)]
     [HttpPatch("block/{userId}")]
     public async Task<IActionResult> BlockUser([FromServices] IUserService userService, int userId)
     {
@@ -29,7 +27,6 @@ public class AdminUserController: ControllerBase
         return Ok();
     }
     
-    [Authorize(Roles = Roles.Admin)]
     [HttpPatch("unblock/{userId}")]
     public async Task<IActionResult> UnblockUser([FromServices] IUserService userService, int userId)
     {

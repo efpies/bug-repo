@@ -10,7 +10,6 @@ using QoodenTask.ServiceInterfaces;
 
 namespace QoodenTask.Controllers;
 
-[Authorize]
 [Route("auth")]
 public class AuthController : ControllerBase
 {

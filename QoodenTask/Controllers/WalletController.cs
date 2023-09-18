@@ -8,7 +8,6 @@ using QoodenTask.ServiceInterfaces;
 
 namespace QoodenTask.Controllers;
 
-[Authorize]
 [Route("wallet")]
 public class WalletController : ControllerBase
 {
@@ -36,24 +35,34 @@ public class WalletController : ControllerBase
     [Authorize(Roles = Roles.User)]
     [HttpPost("deposit/{currencyId}")]
     public async Task<IActionResult> Deposit([FromServices] IDepositService depositService,
-        [FromBody] BaseDepositModel depositModel, string? currencyId)
+        [FromBody] BaseDepositModel depositModel, string currencyId)
     {
-        Transaction? tx;
-
-        var userId = User.GetIdFromClaims();
-
         try
         {
-            tx = await depositService.Deposit(userId,
-                    depositModel, currencyId);
+            Transaction? tx = new Transaction();
+
+            var userId = User.GetIdFromClaims();
+            
+            if (depositModel is DepositFiatModel depositFiatModel)
+            {
+                tx = await depositService.DepositFiat(userId,
+                    depositFiatModel, currencyId);
+            }
+            else if (depositModel is DepositCryptoModel depositCryptoModel)
+            {
+                tx = await depositService.DepositCrypto(userId,
+                    depositCryptoModel, currencyId);
+            }
+
+            if (tx is null)
+                return NotFound(currencyId);
+            
+            return Ok(tx);
         }
         catch (Exception ex) when (ex.Message.Equals("Incorrect currency type"))
         {
             return BadRequest();
         }
-        if (tx is null)
-            return NotFound(currencyId);
-        return Ok(tx);
     }
     
     [Authorize(Roles = Roles.User)]

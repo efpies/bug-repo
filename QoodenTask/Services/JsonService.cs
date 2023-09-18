@@ -8,7 +8,7 @@ public static class JsonService
     {
         try
         {
-            var dataJson = File.ReadAllText(fileName);
+            var dataJson = await File.ReadAllTextAsync(fileName);
             return JsonConvert.DeserializeObject<List<T>>(dataJson);
         }
         catch (FileNotFoundException ex)

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using QoodenTask.Common;
 using QoodenTask.Data;
 using QoodenTask.Models;
 using QoodenTask.ServiceInterfaces;
@@ -44,7 +43,7 @@ public class UserService : IUserService
         return newUser;
     }
 
-    public async void SetRole(User user, string newRole = Roles.User)
+    public async void SetRole(User user, string newRole)
     {
         user.Role = newRole;
         await Update(user);
@@ -72,7 +71,7 @@ public class UserService : IUserService
         return await ChangingActivity(userId,true);
     }
     
-    public async Task<User?> ChangingActivity(int userId, bool isActive)
+    private async Task<User?> ChangingActivity(int userId, bool isActive)
     {
         var user = await GetById(userId, true);
         if (user != null)

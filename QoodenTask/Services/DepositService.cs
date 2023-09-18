@@ -19,30 +19,44 @@ public class DepositService : IDepositService
         _dbContext = dbContext;
     }
     
-    public async Task<Transaction?> Deposit(int userId, BaseDepositModel depositModel, string? currencyId)
+    private async Task<Transaction> CreateBaseTransactionWithoutSave(int userId, string currencyId, BaseDepositModel baseDepositModel)
     {
         var currency = await _currencyService.GetCurrency(currencyId);
         var user = await _userService.GetById(userId);
-        if (user == null || currency == null) return null;
-        var tx = new Transaction
+        
+        if (user == null) throw new Exception("User not found");
+        if (currency == null) throw new Exception("Currency not found");
+        
+        return new Transaction
         {
-            Amount = depositModel.Amount,
+            Amount = baseDepositModel.Amount,
             CurrencyId = currency.Id,
             UserId = user.Id,
             User = user,
             Currency = currency
         };
-        if (depositModel is DepositFiatModel depositFiatModel)
-        {
-            if (currency.Type != CurrencyType.Fiat) throw new Exception("Incorrect currency type");
-            tx.CardNumber = depositFiatModel.CardNumber;
-            tx.CardHolder = depositFiatModel.CardHolder;
-        }
-        else if (depositModel is DepositCryptoModel depositCryptoModel)
-        {
-            if (currency.Type != CurrencyType.Crypto) throw new Exception("Incorrect currency type");
-            tx.Address = depositCryptoModel.Address;
-        }
+    }
+
+    public async Task<Transaction?> DepositFiat(int userId, DepositFiatModel depositFiatModel, string currencyId)
+    {
+        var tx = await CreateBaseTransactionWithoutSave(userId, currencyId, depositFiatModel);
+        if (tx.Currency.Type != CurrencyType.Fiat) throw new Exception("Incorrect currency type"); 
+
+        tx.CardHolder = depositFiatModel.CardHolder;
+        tx.CardNumber = depositFiatModel.CardNumber;
+        
+        _dbContext.Transactions.Add(tx);
+        await _dbContext.SaveChangesAsync();
+        return tx;
+    }
+
+    public async Task<Transaction?> DepositCrypto(int userId, DepositCryptoModel depositCryptoModel, string currencyId)
+    {
+        var tx = await CreateBaseTransactionWithoutSave(userId, currencyId, depositCryptoModel);
+        if (tx.Currency.Type != CurrencyType.Fiat) throw new Exception("Incorrect currency type");
+
+        tx.Address = depositCryptoModel.Address;
+
         _dbContext.Transactions.Add(tx);
         await _dbContext.SaveChangesAsync();
         return tx;

@@ -2,7 +2,6 @@
 using QoodenTask.Data;
 using QoodenTask.Enums;
 using QoodenTask.Models;
-using Type = System.Type;
 
 namespace QoodenTask.Services;
 
@@ -62,7 +61,7 @@ public class MigrationService: BackgroundService
         }
     }
 
-    private async Task<int> AddFirstMigrations(AppDbContext appDbContext)
+    private async Task AddFirstMigrations(AppDbContext appDbContext)
     {
         appDbContext.Migrations.Add(new Migration
         {
@@ -78,6 +77,6 @@ public class MigrationService: BackgroundService
             SourceType = MigrationSourceType.Json,
             Status = MigrationStatus.Waiting
         });
-        return await appDbContext.SaveChangesAsync();
+        await appDbContext.SaveChangesAsync();
     }
 }

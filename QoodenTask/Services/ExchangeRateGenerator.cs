@@ -29,10 +29,10 @@ public class ExchangeRateGenerator: BackgroundService
         {
             try
             {
-                List<Currency>? currencies;
+                IList<Currency>? currencies;
                 using (var currencyService = new CurrencyService(await _dbContextFactory.CreateDbContextAsync(stoppingToken)))
                 {
-                    currencies = (List<Currency>?)await currencyService.GetCurrencies();
+                    currencies = await currencyService.GetCurrencies();
                 }
 
                 if (currencies != null) GenRates(currencies);
@@ -46,7 +46,7 @@ public class ExchangeRateGenerator: BackgroundService
         }
     }
 
-    protected virtual void GenRates(List<Currency> currencies)
+    protected virtual void GenRates(IList<Currency> currencies)
     {
         foreach (var currency in currencies)
         {
@@ -59,15 +59,12 @@ public class ExchangeRateGenerator: BackgroundService
             {
                 item.Rate = currencyRate.Rate *
                             (decimal)(_random.NextDouble() > 0.5d ? _random.NextDouble() + 1 : _random.NextDouble());
-                
-                _exchangeData.RateHistory.Add(item);
             }
             else
             {
                 item.Rate = (decimal)(_random.Next(1000) + _random.NextDouble());
-                
-                _exchangeData.RateHistory.Add(item);
             }
+            _exchangeData.RateHistory.Add(item);
         }
     }
 }

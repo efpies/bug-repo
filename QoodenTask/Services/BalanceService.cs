@@ -49,20 +49,20 @@ public class BalanceService : IBalanceService
 
         var balances = new Dictionary<string, UserBalance>();
         
-        var currencies = (List<Currency>?) await _currencyService.GetCurrencies();
-        currencies?.ForEach(currency => { balances.Add(currency.Id, new UserBalance()); }
-        );
-
         if (user is { Balances: null })
         {
             return balances;
         }
+        
+        var currencies = await _currencyService.GetCurrencies();
+
+        balances = currencies?.ToDictionary(c => c.Id , _ => new UserBalance());
 
         var currentRates = await _rateService.GetCurrentRates();
         
-        user!.Balances.ForEach( balance =>
+        user.Balances.ForEach( balance =>
         {
-            balances[balance.CurrencyId].Balance = balance.Amount;
+            balances![balance.CurrencyId].Balance = balance.Amount;
             balances[balance.CurrencyId].UsdAmount = 
                 ( balance.Amount * currentRates?.Rates[balance.CurrencyId] ?? 0 );
         });

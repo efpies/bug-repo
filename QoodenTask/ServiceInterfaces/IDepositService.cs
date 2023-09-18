@@ -5,5 +5,6 @@ namespace QoodenTask.ServiceInterfaces;
 
 public interface IDepositService
 {
-    public Task<Transaction?> Deposit(int userId, BaseDepositModel depositModel, string? currencyId);
+    public Task<Transaction?> DepositFiat(int userId, DepositFiatModel depositFiatModel, string currencyId);
+    public Task<Transaction?> DepositCrypto(int userId, DepositCryptoModel depositCryptoModel, string currencyId);
 }

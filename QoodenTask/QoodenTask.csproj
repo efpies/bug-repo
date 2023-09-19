@@ -16,7 +16,6 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Npgsql" Version="7.0.4" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
-        <PackageReference Include="Radzen.Blazor" Version="4.15.5" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     </ItemGroup>
 
@@ -24,44 +23,6 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-      <_ContentIncludedByDefault Remove="Shared\TransactionData\AdminTransactionsDataGrip.razor" />
-      <_ContentIncludedByDefault Remove="Shared\TransactionData\UserTransactionsDataGrip.razor" />
-      <_ContentIncludedByDefault Remove="Shared\BalancesData.razor" />
-      <_ContentIncludedByDefault Remove="Shared\CryptoDepositForm.razor" />
-      <_ContentIncludedByDefault Remove="Shared\FiatDepositForm.razor" />
-      <_ContentIncludedByDefault Remove="Shared\Login.razor" />
-      <_ContentIncludedByDefault Remove="Shared\MainLayout.razor" />
-      <_ContentIncludedByDefault Remove="Shared\NavMenu.razor" />
-      <_ContentIncludedByDefault Remove="Shared\SurveyPrompt.razor" />
-      <_ContentIncludedByDefault Remove="Shared\TrasactionsData.razor" />
-      <_ContentIncludedByDefault Remove="Shared\UserInfo.razor" />
-      <_ContentIncludedByDefault Remove="Shared\UsersData.razor" />
-      <_ContentIncludedByDefault Remove="Shared\WalletData.razor" />
-      <_ContentIncludedByDefault Remove="Pages\Error.cshtml" />
-      <_ContentIncludedByDefault Remove="Pages\_Host.cshtml" />
-      <_ContentIncludedByDefault Remove="Pages\Counter.razor" />
-      <_ContentIncludedByDefault Remove="Pages\FetchData.razor" />
-      <_ContentIncludedByDefault Remove="Pages\Index.razor" />
-      <_ContentIncludedByDefault Remove="Pages\Transactions.razor" />
-      <_ContentIncludedByDefault Remove="Pages\Users.razor" />
-      <_ContentIncludedByDefault Remove="Pages\Wallet.razor" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css.map" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\FONT-LICENSE" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\css\open-iconic-bootstrap.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\fonts\open-iconic.eot" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\fonts\open-iconic.otf" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\fonts\open-iconic.svg" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\fonts\open-iconic.ttf" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\fonts\open-iconic.woff" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\ICON-LICENSE" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\README.md" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\site.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\favicon.png" />
-      <_ContentIncludedByDefault Remove="wwwroot\js\login.js" />
     </ItemGroup>
 
 </Project>

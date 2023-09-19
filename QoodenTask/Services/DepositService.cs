@@ -37,28 +37,44 @@ public class DepositService : IDepositService
         };
     }
 
-    public async Task<Transaction?> DepositFiat(int userId, DepositFiatModel depositFiatModel, string currencyId)
+    private async Task<Transaction?> FillTxForFiat(DepositFiatModel depositFiatModel, Transaction tx)
     {
-        var tx = await CreateBaseTransactionWithoutSave(userId, currencyId, depositFiatModel);
         if (tx.Currency.Type != CurrencyType.Fiat) throw new Exception("Incorrect currency type"); 
 
         tx.CardHolder = depositFiatModel.CardHolder;
         tx.CardNumber = depositFiatModel.CardNumber;
-        
-        _dbContext.Transactions.Add(tx);
-        await _dbContext.SaveChangesAsync();
+
         return tx;
     }
 
-    public async Task<Transaction?> DepositCrypto(int userId, DepositCryptoModel depositCryptoModel, string currencyId)
+    private async Task<Transaction?> FillTxForCrypto(DepositCryptoModel depositCryptoModel, Transaction tx)
     {
-        var tx = await CreateBaseTransactionWithoutSave(userId, currencyId, depositCryptoModel);
-        if (tx.Currency.Type != CurrencyType.Fiat) throw new Exception("Incorrect currency type");
+        if (tx.Currency.Type != CurrencyType.Crypto) throw new Exception("Incorrect currency type");
 
         tx.Address = depositCryptoModel.Address;
 
+        return tx;
+    }
+    
+    public async Task<Transaction?> Deposit(int userId, BaseDepositModel depositModel, string currencyId)
+    {
+        var tx = await CreateBaseTransactionWithoutSave(userId, currencyId, depositModel);
+
+        switch (depositModel)
+        {
+            case DepositFiatModel depositFiatModel:
+                tx = await FillTxForFiat(depositFiatModel, tx);
+                break;
+            case DepositCryptoModel depositCryptoModel:
+                tx = await FillTxForCrypto(depositCryptoModel, tx);
+                break;
+        }
+
+        if (tx == null) return tx;
+        
         _dbContext.Transactions.Add(tx);
         await _dbContext.SaveChangesAsync();
+
         return tx;
     }
 }

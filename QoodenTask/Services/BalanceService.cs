@@ -40,7 +40,7 @@ public class BalanceService : IBalanceService
         if (user != null)
         {
             if (user is { Role: Roles.Admin }) return null;
-            user.Balances = await GetUserBalances(user) as List<Balance>;
+            user.Balances = await GetUserBalances(user);
         }
         else
         {
@@ -55,16 +55,13 @@ public class BalanceService : IBalanceService
         }
         
         var currencies = await _currencyService.GetCurrencies();
-
-        balances = currencies?.ToDictionary(c => c.Id , _ => new UserBalance());
-
-        var currentRates = await _rateService.GetCurrentRates();
         
-        user.Balances.ForEach( balance =>
+        var currentRates = await _rateService.GetCurrentRates();
+
+        balances = currencies?.ToDictionary(c => c.Id , c => new UserBalance()
         {
-            balances![balance.CurrencyId].Balance = balance.Amount;
-            balances[balance.CurrencyId].UsdAmount = 
-                ( balance.Amount * currentRates?.Rates[balance.CurrencyId] ?? 0 );
+            Balance = user.Balances.First(b=> b.CurrencyId == c.Id).Amount,
+            UsdAmount = user.Balances.First(b=> b.CurrencyId == c.Id).Amount * currentRates?.Rates[c.Id] ?? 0
         });
 
         return balances;

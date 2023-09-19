@@ -43,19 +43,11 @@ public class WalletController : ControllerBase
 
             var userId = User.GetIdFromClaims();
             
-            if (depositModel is DepositFiatModel depositFiatModel)
-            {
-                tx = await depositService.DepositFiat(userId,
-                    depositFiatModel, currencyId);
-            }
-            else if (depositModel is DepositCryptoModel depositCryptoModel)
-            {
-                tx = await depositService.DepositCrypto(userId,
-                    depositCryptoModel, currencyId);
-            }
+            tx = await depositService.Deposit(userId,
+                depositModel, currencyId);
 
             if (tx is null)
-                return NotFound(currencyId);
+                return BadRequest();
             
             return Ok(tx);
         }

@@ -21,7 +21,7 @@ function toggleForm(){
     } else if($(loginForm).is(":visible")){
         $(loginForm).hide();
         $(signUpForm).show();
-        $(toggleButton).text('Sign in');
+        $(toggleButton).text('Login');
     }
 }
 

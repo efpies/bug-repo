@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+	<title>Client js</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,
 						initial-scale=1.0">
@@ -13,7 +14,7 @@
 <body>
 	<section class="mx-auto">
 		<div class="container">
-			
+			<button class="btn btn-primary btn-block w-25" onclick="toggleForm()" id="toggle-form-button">Sign up</button>
 			<div class="row justify-content-md-center h-100" id = "login-form">
 				<div class = "text-center my-5">
 					<div class="card fat">
@@ -44,6 +45,38 @@
 					</div>
 				</div>
 			</div>
+
+			<div class="row justify-content-md-center h-100" id = "sign-up-form">
+				<div class = "text-center my-5">
+					<div class="card fat">
+						<div class="card-body">
+							<h4 class="card-title">Sign up</h4>
+							<form method="POST" class="my-login-validation">
+								<div class="form-group">
+									<label for="username">Username</label>
+									<input id="username" type="text" class="form-control" name="username" value="" required autofocus>
+								</div>
+
+								<div class="form-group">
+									<label for="new-user-password">Password
+									</label>
+									<input id="new-user-password" type="password" class="form-control" name="password" required data-eye>
+									<div class="invalid-feedback">
+										Password is required
+									</div>
+								</div>
+
+								<div class="form-group m-0">
+									<button type="submit" class="btn btn-primary btn-block">
+										Sign-up
+									</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
 			<div class="row justify-content-md-center h-100" id = "balances">
 				<h4 class = "text-center my-5">Balances</h4>
 				<table class="table" id="balance-table">
@@ -66,7 +99,7 @@
 					<tr>
 						<th scope="col">UserId</th>
 						<th scope="col">Username</th>
-						<th scope="col">Pasword</th>
+						<th scope="col">Password</th>
 						<th scope="col">Role</th>
 						<th scope="col">IsActive</th>
 					</tr>

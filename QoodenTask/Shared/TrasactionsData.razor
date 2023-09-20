@@ -1,0 +1,90 @@
+﻿@using QoodenTask.Models
+@using QoodenTask.Enums
+@using QoodenTask.ServiceInterfaces
+@using QoodenTask.Common
+
+@inject ITransactionService TransactionService
+
+@if (_transactions == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Simple" AllowSorting="true" PageSize="100" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true" Data="@_transactions" TItem="Transaction" ColumnWidth="100px" LogicalFilterOperator="LogicalFilterOperator.And" CellRender="CellRender">
+        <Columns>
+            <RadzenDataGridColumn TItem="Transaction" Property="CreatedDate" Filterable="false" Sortable="true" Title="Date" Frozen="true" TextAlign="TextAlign.Center" />
+            @if (Role == Roles.Admin)
+            {
+                <RadzenDataGridColumn TItem="Transaction" Property="UserId" Filterable="true" Sortable="false" Title="User Id" Frozen="true" TextAlign="TextAlign.Center" />
+            }
+            <RadzenDataGridColumn TItem="Transaction" Property="CurrencyId" Filterable="true" Sortable="false" Title="Currency Id" Frozen="true" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="Transaction" Property="Amount" Filterable="false" Sortable="false" Title="Amount" Frozen="true" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="Transaction" Property="Status" Filterable="true" Sortable="false" Title="Status" Frozen="true" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="Transaction" Filterable="false" Sortable="false" Title="Buttons" Frozen="true" TextAlign="TextAlign.Center" Width="200px">
+                <Template Context="tx">
+                    @switch (Role)
+                    {
+                        case Roles.Admin:
+                        {
+                            @if (tx.Status == TransactionStatus.Waiting)
+                            {
+                                <RadzenButton ButtonStyle="ButtonStyle.Primary" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="info" class="m-1" Click=@(() => TransactionService.ApproveTx(tx)) Text="Approve"/>
+                                <RadzenButton ButtonStyle="ButtonStyle.Secondary" Variant="Variant.Flat" Shade="Shade.Lighter" class="m-1" Click=@(() => TransactionService.DeclineTx(tx)) Text="Decline"/>
+                            }
+                            break;
+                        }
+                        case Roles.User:
+                        {
+                            @if (tx.Status == TransactionStatus.Waiting)
+                            {
+                                <RadzenButton ButtonStyle="ButtonStyle.Secondary" Variant="Variant.Flat" Shade="Shade.Lighter" class="m-1" Click=@(() => TransactionService.CancelTx(tx)) Text="Cancel"/>                        
+                            }
+                            break;
+                        }
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+}
+
+@code {
+    [Parameter] public string? Role { get; set; }
+    [Parameter] public string? CurrencyId { get; set; }
+    [Parameter] public int UserId { get; set; }
+    
+    public Dictionary<TransactionStatus, string> StatusColors { get; set; } = new Dictionary<TransactionStatus, string>()
+    {
+        { TransactionStatus.Waiting, "lemonchiffon" },
+        { TransactionStatus.Approved, "lightgreen" },
+        { TransactionStatus.Declined, "lightcoral" },
+        { TransactionStatus.Canceled, "lightsalmon" }
+    };
+    
+    private List<Transaction>? _transactions;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await LoadTransactions();
+    }
+
+    void CellRender(RowRenderEventArgs<Transaction> args)
+    {
+        args.Attributes.Add("style", $"background-color: {StatusColors[args.Data.Status]}");
+    }
+    
+    private async Task LoadTransactions()
+    {
+        if (Role != null)
+        {
+            if (Role == Roles.Admin)
+                _transactions = (List<Transaction>?)await TransactionService.GetAllTxs();
+            else if (Role == Roles.User)
+            {
+                _transactions = (List<Transaction>?)await TransactionService.GetTxsByUser(UserId);
+            }
+        }
+    }
+}

@@ -1,9 +1,9 @@
 ﻿using QoodenTask.Models;
 
-namespace QoodenTask.Services;
+namespace QoodenTask.ServiceInterfaces;
 
 public interface ICurrencyService
 {
-    public Task<List<Currency>> GetCurrencies();
-    public void AddCurrency();
+    public Task<IList<Currency>?> GetCurrencies();
+    public Task<Currency?> GetCurrency(string? id);
 }

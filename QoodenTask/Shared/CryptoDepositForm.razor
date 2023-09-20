@@ -1,0 +1,37 @@
+﻿@using QoodenTask.Models.Deposit
+@using QoodenTask.ServiceInterfaces
+
+@inject IDepositService DepositService
+
+<RadzenTemplateForm @ref="Form" TItem="DepositCryptoModel" Data="_depositCryptoModel" Submit="OnDeposit">
+    <DataAnnotationsValidator/>
+
+        <RadzenLabel Component="@nameof(DepositCryptoModel.Amount)" Text="Amount"/>
+        <RadzenNumeric @ref="AmountNumeric" Name="@nameof(DepositCryptoModel.Amount)" @bind-Value="_depositCryptoModel.Amount"/>
+        <ValidationMessage For="@(() => _depositCryptoModel.Amount)"/>
+
+        <RadzenLabel Component="@nameof(DepositCryptoModel.Address)" Text="Address"/>
+        <RadzenTextBox @ref="AddressTextBox" Name="@nameof(DepositCryptoModel.Address)" @bind-Value="_depositCryptoModel.Address"/>
+        <ValidationMessage For="@(() => _depositCryptoModel.Address)"/>
+        
+        <RadzenButton ButtonType="ButtonType.Submit" Text="Submit"/>
+
+        <p/>
+    <ValidationSummary/>
+</RadzenTemplateForm>
+
+@code {
+    [Parameter] public string? CurrencyId { get; set; }
+    [Parameter] public int UserId { get; set; }
+    
+    private RadzenNumeric<decimal> AmountNumeric { get; set; } = null!;
+    private RadzenTextBox AddressTextBox { get; set; } = null!;
+    private RadzenTemplateForm<DepositCryptoModel> Form { get; set; } = null!;
+
+    private DepositCryptoModel _depositCryptoModel = new();
+
+    private async Task OnDeposit()
+    {
+        await DepositService.Deposit(UserId, _depositCryptoModel, CurrencyId);
+    }
+}

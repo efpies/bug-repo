@@ -1,0 +1,20 @@
+﻿@page "/Wallet"
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Authorization
+@using QoodenTask.Common
+@using QoodenTask.Extensions
+
+@attribute [Authorize(Roles = Roles.User)]
+
+<AuthorizeView>
+    <Authorized>
+        <WalletData UserId="context.User.GetIdFromClaims()"/>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+}

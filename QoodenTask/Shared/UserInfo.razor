@@ -1,0 +1,17 @@
+﻿@using QoodenTask.Models
+@inject NavigationManager NavigationManager
+
+<h4>Id: @User.Id</h4>
+<h4>Username: @User.UserName</h4>
+<h4>Role: @User.Role</h4>
+
+<BalancesData UserId="@User.Id" ButtonName="Transactions" ButtonMethod="@(balance => ShowTransactions(balance.Key))"></BalancesData>
+
+@code {
+    [Parameter] public User User { get; set; }
+
+    public async Task ShowTransactions(string currencyId)
+    {
+        NavigationManager.NavigateTo($"/txs/{currencyId}");
+    }
+}

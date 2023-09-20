@@ -1,6 +1,17 @@
-﻿namespace QoodenTask.Controllers;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using QoodenTask.ServiceInterfaces;
 
-public class RatesController
+namespace QoodenTask.Controllers;
+
+public class RatesController : ControllerBase
 {
-    
+    [AllowAnonymous]
+    [HttpGet("rates")]
+    public async Task<IActionResult> GetRates([FromServices] IRateService rateService)
+    {
+        var currentRates = await rateService.GetCurrentRates();
+        
+        return Ok(currentRates);
+    }
 }

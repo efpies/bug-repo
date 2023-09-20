@@ -1,0 +1,42 @@
+﻿@using QoodenTask.Models.Deposit
+@using QoodenTask.ServiceInterfaces
+
+@inject IDepositService DepositService
+
+<RadzenTemplateForm @ref="Form" TItem="DepositFiatModel" Data="_depositFiatModel" Submit="OnDeposit">
+    <DataAnnotationsValidator/>
+
+        <RadzenLabel Component="@nameof(DepositFiatModel.Amount)" Text="Amount"/>
+        <RadzenNumeric @ref="AmountNumeric" Name="@nameof(DepositFiatModel.Amount)" @bind-Value="_depositFiatModel.Amount"/>
+        <ValidationMessage For="@(() => _depositFiatModel.Amount)"/>
+
+        <RadzenLabel Component="@nameof(DepositFiatModel.CardNumber)" Text="Card number"/>
+        <RadzenTextBox @ref="CardNumberTextBox" Name="@nameof(DepositFiatModel.CardNumber)" @bind-Value="_depositFiatModel.CardNumber"/>
+        <ValidationMessage For="@(() => _depositFiatModel.CardNumber)"/>
+        
+        <RadzenLabel Component="@nameof(DepositFiatModel.CardHolder)" Text="Card holder"/>
+        <RadzenTextBox @ref="CardHolderTextBox" Name="@nameof(DepositFiatModel.CardHolder)" @bind-Value="_depositFiatModel.CardHolder"/>
+        <ValidationMessage For="@(() => _depositFiatModel.CardHolder)"/>        
+    
+        <RadzenButton ButtonType="ButtonType.Submit" Text="Submit"/>
+
+        <p/>
+    <ValidationSummary/>
+</RadzenTemplateForm>
+
+@code {
+    [Parameter] public string? CurrencyId { get; set; }
+    [Parameter] public int UserId { get; set; }
+    
+    private RadzenNumeric<decimal> AmountNumeric { get; set; } = null!;
+    private RadzenTextBox CardNumberTextBox { get; set; } = null!;
+    private RadzenTextBox CardHolderTextBox { get; set; } = null!;
+    private RadzenTemplateForm<DepositFiatModel> Form { get; set; } = null!;
+
+    private DepositFiatModel _depositFiatModel = new();
+
+    private async Task OnDeposit()
+    {
+        await DepositService.Deposit(UserId, _depositFiatModel, CurrencyId);
+    }
+}
